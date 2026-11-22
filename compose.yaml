@@ -1,0 +1,32 @@
+services:
+  slp-label-studio:
+    image: ghcr.io/soma-web/slp100-label-printer:latest
+    restart: unless-stopped
+    ports:
+      - "${SLP_PUBLISH:-8100}:8100"
+    environment:
+      SLP_PASSWORD: ${SLP_PASSWORD:-}
+      SLP_USERNAME: ${SLP_USERNAME:-admin}
+      SLP_ALLOWED_HOSTS: ${SLP_ALLOWED_HOSTS:-}
+      SLP_MCP: ${SLP_MCP:-0}
+      SLP_MCP_TOKEN: ${SLP_MCP_TOKEN:-}
+      SLP_BACKEND: ${SLP_BACKEND:-auto}
+    volumes:
+      - data:/data
+      - /dev/bus/usb:/dev/bus/usb
+    # USB devices (major 189); no privileged mode needed
+    device_cgroup_rules:
+      - "c 189:* rw"
+    # group that owns the printer's USB node on the host (Debian/Ubuntu: lp = 7)
+    group_add:
+      - "${LP_GID:-7}"
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+
+volumes:
+  data:

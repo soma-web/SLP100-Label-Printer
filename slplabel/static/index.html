@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SLP Label Studio</title>
+<link rel="icon" href="/api/icons/labor">
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header>
+  <h1>SLP Label Studio</h1>
+  <nav>
+    <button data-tab="editor" class="active">Etikett</button>
+    <button data-tab="templates">Vorlagen</button>
+    <button data-tab="settings">Einstellungen</button>
+  </nav>
+  <div class="status" role="status"><span class="dot" id="sdot"></span><span id="stext">Prüfe Drucker …</span></div>
+</header>
+
+<main>
+  <section class="tab active" id="tab-editor">
+    <div class="grid">
+      <div>
+        <div class="card">
+          <h2>Inhalt</h2>
+          <label for="text">Text (eine Zeile pro Zeile)</label>
+          <textarea id="text">Hallo Welt</textarea>
+          <label>Grafik</label>
+          <div class="seg" id="gmode">
+            <button data-v="none" class="on">Keine</button><button data-v="icon">Icon</button>
+            <button data-v="qr">QR-Code</button><button data-v="image">Bild</button>
+          </div>
+          <div id="icon-box" class="hidden">
+            <label>Icon auswählen</label>
+            <div class="icons" id="icons"></div>
+          </div>
+          <div id="qr-box" class="hidden">
+            <label for="qr">QR-Inhalt (Text oder URL)</label>
+            <input id="qr" placeholder="https://…" maxlength="1000">
+          </div>
+          <div id="img-box" class="hidden">
+            <label for="img">Bilddatei</label>
+            <input id="img" type="file" accept="image/png,image/jpeg,image/gif,image/bmp,image/webp">
+            <button class="btn secondary small" id="to-icon">Als Icon speichern</button>
+          </div>
+          <div id="gpos-box" class="hidden">
+            <div class="row">
+              <div><label>Position</label>
+                <div class="seg" id="gpos"><button data-v="left" class="on">Links</button><button data-v="right">Rechts</button></div></div>
+              <div id="rot-box"><label for="imgrot">Drehen</label>
+                <select id="imgrot"><option value="0">0°</option><option value="1">90°</option><option value="2">180°</option><option value="3">270°</option></select></div>
+            </div>
+            <label for="gscale">Grafikgröße: <span id="gscale-val">90 %</span> der Etikettenhöhe</label>
+            <input id="gscale" type="range" min="30" max="100" step="5" value="90">
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>Schrift &amp; Layout</h2>
+          <div class="row">
+            <div><label for="font">Schriftart</label><select id="font"></select></div>
+            <div><label for="size">Größe (pt)</label><input id="size" type="number" min="0" max="100" placeholder="auto"></div>
+          </div>
+          <label>Ausrichtung</label>
+          <div class="seg" id="align">
+            <button data-v="left">Links</button><button data-v="center" class="on">Mitte</button><button data-v="right">Rechts</button>
+          </div>
+          <div class="row">
+            <div><label for="spacing">Zeilenabstand</label>
+              <select id="spacing"><option value="0.9">eng</option><option value="1" selected>normal</option><option value="1.2">weit</option></select></div>
+            <div><label for="margin">Rand (mm)</label><input id="margin" type="number" min="0" max="8" step="0.5" value="1"></div>
+          </div>
+          <label class="check"><input type="checkbox" id="bold" checked> Fett</label>
+          <label class="check"><input type="checkbox" id="border"> Rahmen</label>
+          <label class="check"><input type="checkbox" id="invert"> Weiß auf schwarz</label>
+        </div>
+
+        <div class="card">
+          <h2>Etikett</h2>
+          <label for="media">Etikettengröße</label>
+          <select id="media"></select>
+          <label for="length">Länge (mm, 0 = automatisch)</label>
+          <input id="length" type="number" min="0" max="300" value="0">
+          <p class="hint">Der Druckbereich ist 24 mm hoch, der Text läuft in Längsrichtung.</p>
+        </div>
+      </div>
+
+      <div class="card preview-card">
+        <h2>Vorschau</h2>
+        <div class="preview-wrap">
+          <div class="label-paper"><img id="preview" alt="Etikettenvorschau"></div>
+          <div class="meta" id="pmeta">–</div>
+          <div class="warn hidden" id="pwarn"></div>
+        </div>
+        <div class="actions">
+          <label class="check">Anzahl <input type="number" id="copies" min="1" max="50" value="1"></label>
+          <button class="btn" id="print">Drucken</button>
+          <button class="btn secondary" id="feed" title="Ein leeres Etikett vorschieben">Vorschub</button>
+          <button class="btn secondary" id="save">Als Vorlage speichern</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="tab" id="tab-templates">
+    <div class="card">
+      <div class="head"><h2>Gespeicherte Vorlagen</h2>
+        <button class="btn secondary small" id="export">Exportieren</button>
+        <button class="btn secondary small" id="import">Importieren</button>
+        <input type="file" id="import-file" accept="application/json,.json" class="hidden">
+      </div>
+      <div class="tpl-list" id="tpls"></div>
+      <p class="hint" id="tpl-empty">Noch keine Vorlagen. Im Reiter „Etikett“ auf „Als Vorlage speichern“ klicken oder eine templates.json importieren.</p>
+    </div>
+  </section>
+
+  <section class="tab" id="tab-settings">
+    <div class="settings-grid">
+      <div class="card">
+        <h2>Druck</h2>
+        <label>Schwärzung</label>
+        <div class="seg" id="density">
+          <button data-v="0">Hell</button><button data-v="1">Normal</button><button data-v="2">Dunkel</button><button data-v="3">Sehr dunkel</button>
+        </div>
+        <label class="check"><input type="checkbox" id="fine"> Feinmodus (bessere Qualität, langsamer)</label>
+        <div class="row">
+          <div><label for="dfont">Standardschrift</label><select id="dfont"></select></div>
+          <div><label for="dlen">Standardlänge (mm, 0 = auto)</label><input id="dlen" type="number" min="0" max="300"></div>
+        </div>
+        <button class="btn" id="save-print">Speichern</button>
+      </div>
+      <div class="card">
+        <h2>MCP-Server</h2>
+        <p class="meta">Damit kann ein KI-Assistent wie Claude Etiketten entwerfen, ansehen und drucken.</p>
+        <label class="check"><input type="checkbox" id="mcp-on"> MCP-Server aktivieren</label>
+        <div id="mcp-box" class="hidden">
+          <label for="mcp-url">Adresse</label><input id="mcp-url" readonly>
+          <label for="mcp-cmd">Befehl für Claude Code</label><textarea id="mcp-cmd" readonly class="mono"></textarea>
+          <button class="btn secondary small" id="mcp-copy">Befehl kopieren</button>
+          <p class="hint">Der Befehl enthält ein geheimes Token. Wer es kennt, kann drucken.</p>
+        </div>
+      </div>
+      <div class="card">
+        <h2>Druckbereich kalibrieren</h2>
+        <p class="meta">Nur nötig, wenn oben oder unten etwas neben dem Etikett landet: Kalibrier-Etikett drucken und die kleinste und größte vollständig sichtbare Linie eintragen.</p>
+        <button class="btn secondary" id="calib">Kalibrier-Etikett drucken</button>
+        <div class="row">
+          <div><label for="cal-from">Erste sichtbare Linie (mm)</label><input id="cal-from" type="number" min="0" max="10" step="0.5"></div>
+          <div><label for="cal-to">Letzte sichtbare Linie (mm)</label><input id="cal-to" type="number" min="14" max="24" step="0.5"></div>
+        </div>
+        <button class="btn" id="save-cal">Speichern</button>
+      </div>
+      <div class="card">
+        <h2>Drucker</h2>
+        <p id="pinfo" class="meta">–</p>
+        <button class="btn secondary" id="refresh">Status aktualisieren</button>
+        <p class="warn hidden" id="nopw">Kein Passwort gesetzt: Jeder im Netzwerk kann drucken, Vorlagen ändern und das MCP-Token sehen. Passwort über SLP_PASSWORD setzen.</p>
+        <p class="hint" id="version"></p>
+      </div>
+    </div>
+  </section>
+</main>
+<div class="toast" id="toast" role="alert"></div>
+<script src="/static/app.js"></script>
+</body>
+</html>

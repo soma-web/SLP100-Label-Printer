@@ -1,0 +1,7 @@
+SLP Label Studio
+
+The SLP printer command set in slplabel/protocol.py is derived from
+LPrint (https://github.com/michaelrsweet/lprint), file lprint-sii.c,
+Copyright (c) 2023-2026 by Michael R Sweet, Apache License 2.0.
+
+This project is not affiliated with Seiko Instruments Inc.
