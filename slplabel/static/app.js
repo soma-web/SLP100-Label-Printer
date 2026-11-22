@@ -1,6 +1,6 @@
 'use strict';
 const $ = s => document.querySelector(s);
-const state = { gmode: 'none', gpos: 'left', align: 'center', image: '', icon: '', info: null, settings: {} };
+const state = { gmode: 'none', gpos: 'left', align: 'center', image: '', icon: '', frame: 'none', info: null, settings: {} };
 let previewTimer = null, previewSeq = 0;
 
 function toast(msg, err) {
@@ -34,7 +34,7 @@ function labelSpec() {
   return {
     lines: $('#text').value.split('\n'), font: $('#font').value, bold: $('#bold').checked,
     size_pt: num('#size'), align: state.align, line_spacing: num('#spacing', 1), margin_mm: num('#margin'),
-    border: $('#border').checked, invert: $('#invert').checked, length_mm: num('#length'),
+    frame: state.frame, frame_inset_mm: num('#inset'), invert: $('#invert').checked, length_mm: num('#length'),
     qr: state.gmode === 'qr' ? $('#qr').value : '', icon: state.gmode === 'icon' ? state.icon : '',
     image: state.gmode === 'image' ? state.image : '',
     image_rotate: state.gmode === 'qr' ? 0 : parseInt($('#imgrot').value),
@@ -47,7 +47,9 @@ function applySpec(s) {
   $('#bold').checked = s.bold ?? true; $('#size').value = s.size_pt || '';
   state.align = s.align || 'center'; setSeg('#align', state.align);
   $('#spacing').value = String(s.line_spacing ?? 1); $('#margin').value = s.margin_mm ?? 1;
-  $('#border').checked = !!s.border; $('#invert').checked = !!s.invert;
+  const legacy = s.border && (s.frame ?? 'none') === 'none';     // plain line at the very edge
+  state.frame = legacy ? 'line' : s.frame || 'none'; $('#inset').value = legacy ? 0 : s.frame_inset_mm ?? 0.5; markFrame();
+  $('#invert').checked = !!s.invert;
   $('#length').value = s.length_mm || 0; syncMedia();
   state.gmode = s.qr ? 'qr' : s.icon ? 'icon' : s.image ? 'image' : 'none'; setSeg('#gmode', state.gmode);
   $('#qr').value = s.qr || ''; state.icon = s.icon || ''; state.image = s.image || ''; $('#img').value = '';
@@ -101,6 +103,21 @@ function renderIcons() {
   }));
   markIcon();
   const on = $('#icons .on'); $('#icons').scrollTop = on ? on.offsetTop - 8 : 0;
+}
+function renderFrames() {
+  $('#frames').replaceChildren(...[{ name: 'none', label: 'Kein Rahmen' }, ...state.info.frames].map(f => {
+    const b = el('button', { className: 'icon', title: f.label });
+    if (f.name === 'none') b.append(el('i', { textContent: '–' })); else b.append(el('img', { src: '/api/frames/' + f.name, alt: '' }));
+    b.append(el('span', { textContent: f.label }));
+    b.dataset.name = f.name;
+    b.onclick = () => { state.frame = f.name; markFrame(); schedulePreview(); };
+    return b;
+  }));
+  markFrame();
+}
+function markFrame() {
+  $('#frames').querySelectorAll('.icon').forEach(b => b.classList.toggle('on', b.dataset.name === state.frame));
+  $('#inset-box').classList.toggle('hidden', state.frame === 'none');
 }
 function syncMedia() {
   const v = String(num('#length'));
@@ -224,12 +241,12 @@ async function init() {
     new Option('Eigene Länge …', 'custom'));
   $('#length').value = state.settings.default_length_mm; syncMedia();
   $('#copies').max = state.info.max_copies;
-  fillSettings();
+  fillSettings(); renderFrames();
 
   seg('#gmode', 'gmode', () => { updateGraphicUI(); schedulePreview(); });
   seg('#gpos', 'gpos', schedulePreview); seg('#align', 'align', schedulePreview); seg('#density');
-  for (const id of ['#text', '#qr', '#size', '#margin']) $(id).addEventListener('input', schedulePreview);
-  for (const id of ['#font', '#spacing', '#bold', '#border', '#invert', '#imgrot']) $(id).addEventListener('change', schedulePreview);
+  for (const id of ['#text', '#qr', '#size', '#margin', '#inset']) $(id).addEventListener('input', schedulePreview);
+  for (const id of ['#font', '#spacing', '#bold', '#invert', '#imgrot']) $(id).addEventListener('change', schedulePreview);
   $('#length').addEventListener('input', () => { syncMedia(); schedulePreview(); });
   $('#gscale').addEventListener('input', () => { $('#gscale-val').textContent = $('#gscale').value + ' %'; schedulePreview(); });
   $('#media').addEventListener('change', () => {

@@ -7,9 +7,11 @@ from mcp.server import MCPServer
 from mcp.server.mcpserver import Image
 
 from . import __version__, render
+from .frames import FRAMES
 from .render import LabelSpec
 from .service import Service
 
+Frame = Literal["none", *FRAMES]
 INSTRUCTIONS = """Prints labels on a SII Smart Label Printer 100 (black/white thermal, 203 dpi).
 Labels are 24 mm high; text runs along the length. The usual label is 83 mm long.
 Call preview_label before print_label and look at the picture: printing uses up real
@@ -21,10 +23,10 @@ def build_mcp(service: Service) -> MCPServer:
                     instructions=INSTRUCTIONS)
     run = to_thread.run_sync
 
-    def make_spec(lines, icon, qr, font, bold, size_pt, align, border, invert, length_mm, margin_mm,
+    def make_spec(lines, icon, qr, font, bold, size_pt, align, frame, invert, length_mm, margin_mm,
                   graphic_pos, graphic_scale) -> LabelSpec:
         return LabelSpec(lines=lines or [], icon=icon, qr=qr, font=font, bold=bold, size_pt=size_pt,
-                         align=align, border=border, invert=invert, length_mm=length_mm,
+                         align=align, frame=frame, invert=invert, length_mm=length_mm,
                          margin_mm=margin_mm, graphic_pos=graphic_pos, graphic_scale=graphic_scale)
 
     def preview(spec: LabelSpec):
@@ -50,7 +52,7 @@ def build_mcp(service: Service) -> MCPServer:
     @mcp.tool(structured_output=False)
     async def preview_label(
         lines: list[str] | None = None, icon: str = "", qr: str = "", font: str = "", bold: bool = True,
-        size_pt: float = 0, align: Literal["left", "center", "right"] = "center", border: bool = False,
+        size_pt: float = 0, align: Literal["left", "center", "right"] = "center", frame: Frame = "none",
         invert: bool = False, length_mm: float = 83, margin_mm: float = 2,
         graphic_pos: Literal["left", "right"] = "left", graphic_scale: float = 0.9,
     ) -> list:
@@ -58,21 +60,22 @@ def build_mcp(service: Service) -> MCPServer:
 
         lines: text lines. icon: name of an icon. qr: QR code content (wins over icon).
         size_pt 0 = largest size that fits. length_mm 0 = as long as the content.
+        frame: border style around the label, e.g. rounded, dashed, stars, hazard.
         graphic_scale: height of icon/QR code as a fraction of the label (0.3-1.0).
         """
-        spec = make_spec(lines, icon, qr, font, bold, size_pt, align, border, invert, length_mm,
+        spec = make_spec(lines, icon, qr, font, bold, size_pt, align, frame, invert, length_mm,
                          margin_mm, graphic_pos, graphic_scale)
         return await run(preview, spec)
 
     @mcp.tool()
     async def print_label(
         lines: list[str] | None = None, icon: str = "", qr: str = "", font: str = "", bold: bool = True,
-        size_pt: float = 0, align: Literal["left", "center", "right"] = "center", border: bool = False,
+        size_pt: float = 0, align: Literal["left", "center", "right"] = "center", frame: Frame = "none",
         invert: bool = False, length_mm: float = 83, margin_mm: float = 2,
         graphic_pos: Literal["left", "right"] = "left", graphic_scale: float = 0.9, copies: int = 1,
     ) -> dict:
         """Print a label on paper. Parameters as in preview_label; preview first."""
-        spec = make_spec(lines, icon, qr, font, bold, size_pt, align, border, invert, length_mm,
+        spec = make_spec(lines, icon, qr, font, bold, size_pt, align, frame, invert, length_mm,
                          margin_mm, graphic_pos, graphic_scale)
         return await run(lambda: service.print_label(spec, copies, limit=service.config.mcp_max_copies))
 
@@ -91,11 +94,11 @@ def build_mcp(service: Service) -> MCPServer:
     async def save_template(
         name: str, lines: list[str] | None = None, icon: str = "", qr: str = "", font: str = "",
         bold: bool = True, size_pt: float = 0, align: Literal["left", "center", "right"] = "center",
-        border: bool = False, invert: bool = False, length_mm: float = 83, margin_mm: float = 2,
+        frame: Frame = "none", invert: bool = False, length_mm: float = 83, margin_mm: float = 2,
         graphic_pos: Literal["left", "right"] = "left", graphic_scale: float = 0.9,
     ) -> dict:
         """Save a label as a new template. Existing templates are not overwritten."""
-        spec = make_spec(lines, icon, qr, font, bold, size_pt, align, border, invert, length_mm,
+        spec = make_spec(lines, icon, qr, font, bold, size_pt, align, frame, invert, length_mm,
                          margin_mm, graphic_pos, graphic_scale)
         return await run(lambda: service.save_templates({name: spec.model_dump()}, overwrite=False))
 

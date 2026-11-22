@@ -12,6 +12,7 @@ from typing import Literal
 from PIL import Image, ImageDraw, ImageFont, ImageOps
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
+from .frames import FRAMES, frame_image
 from .protocol import DOTS, DPI
 
 Image.MAX_IMAGE_PIXELS = 40_000_000
@@ -33,6 +34,7 @@ ALIASES = {
     "Verdana": "DejaVu Sans", "Tahoma": "DejaVu Sans", "Segoe UI": "Open Sans",
     "Calibri": "Open Sans", "Bahnschrift": "Open Sans", "Impact": "Liberation Sans",
 }
+FRAME_CLEARANCE = 0.7      # mm between frame and content
 # Pure black/white drawings with index.json (German labels), see tools/build_icons.py
 ICON_SET = Path(__file__).parent / "icons" / "set"
 MEDIA = [("Adresse klein", 24, 83), ("Mehrzweck", 24, 44)]
@@ -55,7 +57,9 @@ class LabelSpec(BaseModel):
     line_spacing: float = Field(1.0, ge=0.5, le=3)
     margin_mm: float = Field(1.0, ge=0, le=8)
     length_mm: float = Field(0, ge=0, le=300)
-    border: bool = False
+    border: bool = False          # plain line at the very edge; older templates use it
+    frame: Literal["none", *FRAMES] = "none"
+    frame_inset_mm: float = Field(0.5, ge=0, le=5)
     invert: bool = False
     qr: str = Field("", max_length=1000)
     icon: str = Field("", max_length=80)
@@ -173,18 +177,23 @@ def render(spec: LabelSpec, icons: dict[str, Path] | None = None, default_font: 
     lines = list(spec.lines)
     while lines and not lines[-1].strip():
         lines.pop()
-    margin = mm_to_dots(spec.margin_mm)
+    margin_x = margin_y = mm_to_dots(spec.margin_mm)
+    inset = mm_to_dots(spec.frame_inset_mm)
+    if spec.frame != "none":                     # keep the content clear of the frame
+        _, _, depth_x, depth_y = FRAMES[spec.frame]
+        margin_x = max(margin_x, inset + mm_to_dots(depth_x + FRAME_CLEARANCE))
+        margin_y = max(margin_y, inset + mm_to_dots(depth_y + FRAME_CLEARANCE))
     # Printable band across the head (calibrated per label roll).
     off_top, off_bottom = mm_to_dots(area_top_mm), mm_to_dots(area_bottom_mm)
-    top = off_top + margin
-    avail_h = DOTS - top - off_bottom - margin
+    top = off_top + margin_y
+    avail_h = DOTS - top - off_bottom - margin_y
     if avail_h < 24:
         raise LabelError("Rand oder Druckbereich lassen keinen Platz auf dem Etikett.")
     mid = top + avail_h // 2
     length = mm_to_dots(spec.length_mm) if spec.length_mm else 0
-    if length and length < 2 * margin + 24:
+    if length and length < 2 * margin_x + 24:
         raise LabelError("Das Etikett ist zu kurz für diesen Rand.")
-    inner_w = length - 2 * margin if length else None
+    inner_w = length - 2 * margin_x if length else None
     gap = mm_to_dots(1.5)
 
     # graphic block: QR code, icon or image
@@ -237,7 +246,7 @@ def render(spec: LabelSpec, icons: dict[str, Path] | None = None, default_font: 
         font, line_h, total_h, text_w = best
 
     if not length:
-        length = max(int(2 * margin + g_w + text_w) + mm_to_dots(2), mm_to_dots(10))
+        length = max(int(2 * margin_x + g_w + text_w) + mm_to_dots(2), mm_to_dots(10))
         if length > mm_to_dots(300):
             raise LabelError("Das Etikett würde länger als 300 mm.")
 
@@ -245,7 +254,7 @@ def render(spec: LabelSpec, icons: dict[str, Path] | None = None, default_font: 
     d = ImageDraw.Draw(img)
     d.fontmode = "1"                             # no anti-aliasing -> crisp dots
 
-    x0, x1 = margin, length - margin
+    x0, x1 = margin_x, length - margin_x
     g_box = None
     if graphic:
         gx = x1 - graphic.width if spec.graphic_pos == "right" else x0
@@ -265,7 +274,11 @@ def render(spec: LabelSpec, icons: dict[str, Path] | None = None, default_font: 
         d.text((x, y), line, font=font, fill=0)
         y += line_h
 
-    if spec.border:
+    if spec.frame != "none":
+        box = (length - 2 * inset, DOTS - off_top - off_bottom - 2 * inset)
+        frame = frame_image(spec.frame, *box)
+        img.paste(0, (inset, off_top + inset), frame.point(lambda v: 255 - v))
+    elif spec.border:
         b = max(mm_to_dots(0.3), 2)
         d.rectangle([0, off_top, length - 1, DOTS - 1 - off_bottom], outline=0, width=b)
 

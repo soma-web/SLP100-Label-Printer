@@ -77,8 +77,17 @@
             <div><label for="margin">Rand (mm)</label><input id="margin" type="number" min="0" max="8" step="0.5" value="2"></div>
           </div>
           <label class="check"><input type="checkbox" id="bold" checked> Fett</label>
-          <label class="check"><input type="checkbox" id="border"> Rahmen</label>
           <label class="check"><input type="checkbox" id="invert"> Weiß auf schwarz</label>
+        </div>
+
+        <div class="card">
+          <h2>Rahmen</h2>
+          <div class="icons" id="frames"></div>
+          <div id="inset-box" class="hidden">
+            <label for="inset">Abstand des Rahmens zum Etikettenrand (mm)</label>
+            <input id="inset" type="number" min="0" max="5" step="0.5" value="0.5">
+            <p class="hint">Der Inhalt rückt bei breiten Rahmen automatisch nach innen.</p>
+          </div>
         </div>
 
         <div class="card">

@@ -7,7 +7,7 @@ und MCP-Server in einem Docker-Container.
 discontinued SII Smart Label Printer 100. No vendor driver or CUPS required.*
 
 - **Treiber im Container:** spricht den Drucker direkt über USB an, ohne CUPS und ohne Herstellertreiber
-- **Weboberfläche:** Text, über 700 Icons mit Suche, Bilder, QR-Codes, Vorlagen, Live-Vorschau Punkt für Punkt
+- **Weboberfläche:** Text, über 700 Icons mit Suche, 23 Rahmenstile, Bilder, QR-Codes, Vorlagen, Live-Vorschau Punkt für Punkt
 - **MCP-Server:** KI-Assistenten wie Claude können Etiketten entwerfen, ansehen und drucken
 
 > Geprüft mit einem SLP100 an einer Debian-13-VM unter Proxmox (amd64). Andere Modelle der SLP-Reihe

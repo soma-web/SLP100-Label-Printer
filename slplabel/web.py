@@ -20,6 +20,7 @@ from starlette.routing import Mount, Route
 from starlette.staticfiles import StaticFiles
 
 from . import __version__, render
+from .frames import FRAMES, frame_image
 from .mcp_server import build_mcp
 from .printer import PrinterError
 from .render import LabelError, LabelSpec
@@ -171,6 +172,7 @@ def create_app(service: Service) -> Guard:
         return {"version": __version__, "fonts": render.available_fonts(),
                 "media": [{"name": n, "width": w, "length": ln} for n, w, ln in render.MEDIA],
                 "icons": service.icon_list(),
+                "frames": [{"name": n, "label": f[0]} for n, f in FRAMES.items()],
                 "settings": service.settings.model_dump(), "max_copies": service.config.max_copies,
                 "password_set": bool(service.config.password)}
 
@@ -213,6 +215,13 @@ def create_app(service: Service) -> Guard:
         cache = "no-cache" if path.parent == service.icon_dir else "max-age=86400"
         return FileResponse(path, media_type="image/png", headers={"cache-control": cache})
 
+    def frame_file(r, _b):
+        name = r.path_params["name"]
+        if name not in FRAMES:
+            return JSONResponse({"error": "Nicht gefunden"}, 404)
+        return Response(render.png_bytes(frame_image(name, 240, 128)), media_type="image/png",
+                        headers={"cache-control": "max-age=86400"})
+
     def add_icon(_r, body):
         return {"name": service.add_icon(body.get("name"), str(body.get("image") or ""))}
 
@@ -240,6 +249,7 @@ def create_app(service: Service) -> Guard:
         Route("/api/icons", api(add_icon), methods=["POST"]),
         Route("/api/icons/{name}", api(icon_file)),
         Route("/api/icons/{name}", api(delete_icon), methods=["DELETE"]),
+        Route("/api/frames/{name}", api(frame_file)),
         Route("/api/mcp", api(mcp_info)),
         Mount("/static", StaticFiles(directory=STATIC)),
     ]

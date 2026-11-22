@@ -9,6 +9,7 @@ from pydantic import ValidationError
 
 from slplabel import protocol, render, usbfs
 from slplabel.config import Config
+from slplabel.frames import FRAMES, frame_image
 from slplabel.printer import Printer, PrinterError
 from slplabel.render import LabelError, LabelSpec
 from slplabel.service import Service
@@ -155,6 +156,49 @@ def test_default_label_is_small_address(service):
     assert service.settings.default_length_mm == 83
     # saved templates rely on these defaults, the editor starts with other values
     assert LabelSpec().length_mm == 0 and LabelSpec().margin_mm == 1
+
+
+@pytest.mark.parametrize("style", FRAMES)
+def test_frame_stays_clear_of_content(service, style):
+    plain = dict(lines=["Wg"], qr="abc", length_mm=83, margin_mm=0, graphic_scale=1.0)
+    img, warnings = service.render(LabelSpec(frame=style, **plain))
+    frame, _ = service.render(LabelSpec(frame=style, length_mm=83))
+    content = Image.new("L", img.size, 255)
+    content.paste(0, (0, 0), frame.convert("L").point(lambda v: 255 - v))
+    extra = Image.eval(img.convert("L"), lambda v: 255 - v)           # black in the label
+    extra.paste(0, (0, 0), content.point(lambda v: 255 - v))          # minus the frame
+    x0, y0, x1, y1 = extra.getbbox()
+    ring = frame.convert("L").crop((x0, y0, x1, y1))
+    assert ring.getextrema() == (255, 255) and not warnings           # no frame inside the content
+    assert img.convert("L").getextrema() == (0, 255)
+
+
+@pytest.mark.parametrize("style", FRAMES)
+def test_frame_works_on_every_size(style):
+    for length in (10, 44, 300):
+        img = frame_image(style, render.mm_to_dots(length), 100)
+        assert img.getextrema() == (0, 255) and len(img.getcolors()) == 2
+    service_img, _ = render.render(LabelSpec(frame=style, frame_inset_mm=3, length_mm=20, margin_mm=0))
+    assert service_img.size == (render.mm_to_dots(20), protocol.DOTS)
+
+
+def test_old_border_is_unchanged_and_equals_line(service):
+    old, _ = service.render(LabelSpec(lines=["Hallo"], border=True, length_mm=83))
+    new, _ = service.render(LabelSpec(lines=["Hallo"], frame="line", frame_inset_mm=0, length_mm=83))
+    assert old.tobytes() == new.tobytes()
+
+
+def test_frame_respects_print_area(service):
+    service.update_settings({"area_top_mm": 3, "area_bottom_mm": 2})
+    img, _ = service.render(LabelSpec(lines=["A"], frame="thick", frame_inset_mm=0, length_mm=83))
+    box = img.convert("L").point(lambda v: 255 - v).getbbox()
+    assert box == (0, render.mm_to_dots(3), img.width, protocol.DOTS - render.mm_to_dots(2))
+
+
+def test_empty_frame_can_be_printed_for_handwriting(service):
+    assert service.print_label(LabelSpec(frame="stars", length_mm=83))["copies"] == 1
+    with pytest.raises(ValidationError):
+        LabelSpec(frame="gibt-es-nicht")
 
 
 def test_settings_persist_and_validate(service):

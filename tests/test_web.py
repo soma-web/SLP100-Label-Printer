@@ -120,7 +120,7 @@ def test_mcp_tools_end_to_end(tmp_path):
         async with httpx2.AsyncClient(headers={"Authorization": f"Bearer {token}"}) as http:
             async with Client(streamable_http_client(url + "/mcp", http_client=http)) as c:
                 tools = {t.name for t in (await c.list_tools()).tools}
-                label = {"lines": ["Mein", "Test"], "icon": "labor", "border": True}
+                label = {"lines": ["Mein", "Test"], "icon": "labor", "frame": "stars"}
                 preview = await c.call_tool("preview_label", label)
                 before = len(service.printer.mock_labels)
                 printed = await c.call_tool("print_label", {**label, "copies": 2})

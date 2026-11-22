@@ -175,7 +175,7 @@ class Service:
         limit = limit or self.config.max_copies
         if not 1 <= int(copies) <= limit:
             raise LabelError(f"Anzahl muss zwischen 1 und {limit} liegen.")
-        if not (any(t.strip() for t in spec.lines) or spec.qr or spec.icon or spec.image):
+        if not (any(t.strip() for t in spec.lines) or spec.qr or spec.icon or spec.image or spec.frame != "none"):
             raise LabelError("Das Etikett ist leer.")
         img, warnings = self.render(spec)
         s = self.settings
