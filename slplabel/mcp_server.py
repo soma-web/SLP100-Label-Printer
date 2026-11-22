@@ -51,7 +51,7 @@ def build_mcp(service: Service) -> MCPServer:
     async def preview_label(
         lines: list[str] | None = None, icon: str = "", qr: str = "", font: str = "", bold: bool = True,
         size_pt: float = 0, align: Literal["left", "center", "right"] = "center", border: bool = False,
-        invert: bool = False, length_mm: float = 83, margin_mm: float = 1,
+        invert: bool = False, length_mm: float = 83, margin_mm: float = 2,
         graphic_pos: Literal["left", "right"] = "left", graphic_scale: float = 0.9,
     ) -> list:
         """Render a label and return it as a picture without printing.
@@ -68,7 +68,7 @@ def build_mcp(service: Service) -> MCPServer:
     async def print_label(
         lines: list[str] | None = None, icon: str = "", qr: str = "", font: str = "", bold: bool = True,
         size_pt: float = 0, align: Literal["left", "center", "right"] = "center", border: bool = False,
-        invert: bool = False, length_mm: float = 83, margin_mm: float = 1,
+        invert: bool = False, length_mm: float = 83, margin_mm: float = 2,
         graphic_pos: Literal["left", "right"] = "left", graphic_scale: float = 0.9, copies: int = 1,
     ) -> dict:
         """Print a label on paper. Parameters as in preview_label; preview first."""
@@ -91,7 +91,7 @@ def build_mcp(service: Service) -> MCPServer:
     async def save_template(
         name: str, lines: list[str] | None = None, icon: str = "", qr: str = "", font: str = "",
         bold: bool = True, size_pt: float = 0, align: Literal["left", "center", "right"] = "center",
-        border: bool = False, invert: bool = False, length_mm: float = 83, margin_mm: float = 1,
+        border: bool = False, invert: bool = False, length_mm: float = 83, margin_mm: float = 2,
         graphic_pos: Literal["left", "right"] = "left", graphic_scale: float = 0.9,
     ) -> dict:
         """Save a label as a new template. Existing templates are not overwritten."""

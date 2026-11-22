@@ -153,7 +153,8 @@ def test_own_icon_with_name_of_the_set_stays(service):
 
 def test_default_label_is_small_address(service):
     assert service.settings.default_length_mm == 83
-    assert LabelSpec().length_mm == 0        # saved templates rely on this default
+    # saved templates rely on these defaults, the editor starts with other values
+    assert LabelSpec().length_mm == 0 and LabelSpec().margin_mm == 1
 
 
 def test_settings_persist_and_validate(service):
