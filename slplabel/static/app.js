@@ -68,11 +68,30 @@ function updateGraphicUI() {
   $('#to-icon').classList.toggle('hidden', !state.image);
   renderIcons();
 }
+const plain = s => s.toLowerCase().replace(/ß/g, 'ss').normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+function fillIconCategories() {
+  const cats = [...new Set(state.info.icons.map(i => i.category))], old = $('#icon-cat').value;
+  $('#icon-cat').replaceChildren(new Option(`Alle (${state.info.icons.length})`, ''), ...cats.map(c => new Option(c, c)));
+  $('#icon-cat').value = cats.includes(old) ? old : '';
+}
+function markIcon() {
+  $('#icons').querySelectorAll('.icon').forEach(b => b.classList.toggle('on', b.dataset.name === state.icon));
+  const sel = state.info.icons.find(i => i.name === state.icon);
+  $('#icon-hint').textContent = (sel ? `Ausgewählt: ${sel.label}` : state.icon ? `Icon „${state.icon}“ gibt es nicht mehr.` : 'Noch kein Icon ausgewählt.')
+    + ($('#icons').childElementCount ? '' : ' Keine Treffer für diese Suche.');
+}
 function renderIcons() {
-  $('#icons').replaceChildren(...state.info.icons.map(i => {
-    const b = el('button', { className: 'icon' + (i.name === state.icon ? ' on' : ''), title: i.name },
-      el('img', { src: '/api/icons/' + encodeURIComponent(i.name), alt: '' }), el('span', { textContent: i.name }));
-    b.onclick = () => { state.icon = i.name; renderIcons(); schedulePreview(); };
+  if (state.gmode !== 'icon') return;
+  const words = plain($('#icon-search').value).split(/\s+/).filter(Boolean), cat = $('#icon-cat').value;
+  const hits = state.info.icons.filter(i => {
+    const text = plain(`${i.label} ${i.name} ${i.category} ${i.words}`);
+    return (!cat || i.category === cat) && words.every(w => text.includes(w));
+  });
+  $('#icons').replaceChildren(...hits.map(i => {
+    const b = el('button', { className: 'icon', title: i.label + (i.own ? ' (Rechtsklick: löschen)' : '') },
+      el('img', { loading: 'lazy', src: '/api/icons/' + encodeURIComponent(i.name), alt: '' }), el('span', { textContent: i.label }));
+    b.dataset.name = i.name;
+    b.onclick = () => { state.icon = i.name; markIcon(); schedulePreview(); };
     if (i.own) b.oncontextmenu = guarded(async e => {
       e.preventDefault();
       if (!confirm(`Icon „${i.name}“ löschen?`)) return;
@@ -80,6 +99,8 @@ function renderIcons() {
     });
     return b;
   }));
+  markIcon();
+  const on = $('#icons .on'); $('#icons').scrollTop = on ? on.offsetTop - 8 : 0;
 }
 function syncMedia() {
   const v = String(num('#length'));
@@ -191,7 +212,9 @@ function showTab(t) {
   if (t === 'settings') { refreshStatus(); guarded(showMcp)(); }
 }
 
-async function loadInfo() { state.info = await api('/api/info'); state.settings = state.info.settings; }
+async function loadInfo() {
+  state.info = await api('/api/info'); state.settings = state.info.settings; fillIconCategories();
+}
 async function init() {
   await loadInfo();
   for (const id of ['#font', '#dfont']) $(id).replaceChildren(...state.info.fonts.map(f => new Option(f, f)));
@@ -213,6 +236,7 @@ async function init() {
     if ($('#media').value === 'custom') $('#length').focus(); else $('#length').value = $('#media').value;
     schedulePreview();
   });
+  $('#icon-search').addEventListener('input', renderIcons); $('#icon-cat').addEventListener('change', renderIcons);
   $('#img').addEventListener('change', () => {
     const f = $('#img').files[0]; if (!f) return;
     if (f.size > 5e6) return toast('Das Bild ist zu groß (höchstens 5 MB).', true);

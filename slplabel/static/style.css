@@ -60,7 +60,7 @@ textarea.mono { font: 12px/1.5 ui-monospace, Consolas, monospace; word-break: br
 .warn { color: var(--warn); font-size: 13px; }
 .actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; justify-content: center; margin-top: 16px; }
 .actions .check { margin: 0; } .actions input[type=number] { width: 70px; }
-.icons { display: grid; grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); gap: 8px; max-height: 220px; overflow: auto; }
+.icons { position: relative; display: grid; grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); gap: 8px; max-height: 320px; overflow: auto; margin-top: 10px; }
 .icon { position: relative; background: #fff; border: 2px solid var(--line); border-radius: 6px; padding: 6px; cursor: pointer; font: inherit; }
 .icon.on { border-color: var(--accent); }
 .icon img { width: 100%; height: 48px; object-fit: contain; display: block; }

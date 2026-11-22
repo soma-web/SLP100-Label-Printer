@@ -16,6 +16,7 @@ from .protocol import to_job
 from .render import LabelError, LabelSpec
 
 BUILTIN_ICONS = Path(__file__).parent / "icons"
+ICON_DIRS = (BUILTIN_ICONS, render.ICON_SET)
 MAX_TEMPLATES = 500
 MAX_ICON_BYTES = 3_000_000
 
@@ -26,7 +27,7 @@ class Settings(BaseModel):
     density: int = Field(1, ge=0, le=3)
     fine: bool = True
     default_font: str = Field("", max_length=60)
-    default_length_mm: float = Field(0, ge=0, le=300)
+    default_length_mm: float = Field(83, ge=0, le=300)
     area_top_mm: float = Field(0, ge=0, le=10)
     area_bottom_mm: float = Field(0, ge=0, le=10)
     mcp_enabled: bool = False
@@ -126,16 +127,30 @@ class Service:
     # -- icons -------------------------------------------------------------
     def icons(self) -> dict[str, Path]:
         found = {}
-        for d in (BUILTIN_ICONS, self.icon_dir):
+        for d in (*ICON_DIRS, self.icon_dir):
             for p in sorted(d.glob("*.png")):
                 found[p.stem] = p
         return found
+
+    def icon_list(self) -> list[dict]:
+        """Icons for choosing: own ones first, then the drawn motifs, then the set."""
+        index = render.icon_index()
+        out = []
+        for name, path in self.icons().items():
+            own = path.parent == self.icon_dir
+            meta = {} if own else index.get(name, {})
+            out.append({"name": name, "own": own, "label": meta.get("label") or name.capitalize(),
+                        "category": "Eigene Icons" if own else meta.get("category", "Motive"),
+                        "words": meta.get("words", "")})
+        order = {n: i for i, n in enumerate(index)}
+        out.sort(key=lambda i: (not i["own"], i["category"] != "Motive", order.get(i["name"], -1)))
+        return out
 
     def add_icon(self, name: str, data_url: str) -> str:
         name = re.sub(r"[^\w-]+", "-", str(name or "").strip().lower()).strip("-")[:60]
         if not name:
             raise LabelError("Ungültiger Icon-Name.")
-        if (BUILTIN_ICONS / f"{name}.png").exists():
+        if any((d / f"{name}.png").exists() for d in ICON_DIRS):
             raise LabelError("Ein mitgeliefertes Icon heißt schon so.")
         raw = render.decode_data_url(data_url)
         if len(raw) > MAX_ICON_BYTES:

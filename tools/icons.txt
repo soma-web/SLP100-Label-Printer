@@ -1,0 +1,783 @@
+# Icon set: Material Design Icons name | German label | extra search words
+# The icon's file name is made from the label. Labels must stay unchanged once
+# published, because saved templates refer to them. Build: tools/build_icons.py
+
+[Haushalt]
+home|Haus|wohnung zuhause
+home-heart|Zuhause|haus herz
+sofa|Sofa|couch wohnzimmer
+bed|Bett|schlafzimmer
+bed-double|Doppelbett|schlafzimmer
+bunk-bed|Stockbett|kinderzimmer hochbett
+table-furniture|Tisch|möbel
+chair-rolling|Bürostuhl|stuhl
+wardrobe|Kleiderschrank|schrank
+dresser|Kommode|schrank
+bookshelf|Bücherregal|regal bücher
+library-shelves|Regal|lager
+door|Tür|eingang
+door-open|Tür offen|eingang
+window-closed|Fenster|
+blinds|Jalousie|rollladen
+curtains|Vorhang|gardine
+lamp|Lampe|licht
+floor-lamp|Stehlampe|licht
+desk-lamp|Schreibtischlampe|licht
+ceiling-light|Deckenlampe|licht
+lightbulb|Glühbirne|licht leuchtmittel idee
+lightbulb-on|Glühbirne an|licht leuchtmittel idee
+candle|Kerze|licht
+string-lights|Lichterkette|weihnachten
+fireplace|Kamin|feuer ofen
+radiator|Heizkörper|heizung
+shower-head|Dusche|bad
+bathtub|Badewanne|bad
+toilet|Toilette|wc klo
+paper-roll|Klopapier|küchenrolle papier
+hand-wash|Hände waschen|seife hygiene
+toothbrush|Zahnbürste|bad
+toothbrush-paste|Zahnpasta|bad
+washing-machine|Waschmaschine|wäsche
+tumble-dryer|Wäschetrockner|wäsche
+iron|Bügeleisen|wäsche
+hanger|Kleiderbügel|garderobe
+vacuum|Staubsauger|putzen
+broom|Besen|putzen
+bucket|Eimer|putzen
+spray-bottle|Sprühflasche|putzmittel reiniger
+bottle-tonic|Flasche Reiniger|putzmittel
+trash-can|Mülleimer|abfall papierkorb
+delete-empty|Papierkorb|abfall müll
+recycle|Recycling|gelber sack wertstoff
+mirror|Spiegel|bad
+clock-outline|Uhr|zeit
+alarm|Wecker|uhr
+key-variant|Schlüssel|
+key-chain|Schlüsselbund|
+lock|Schloss|abgeschlossen
+lock-open-variant|Schloss offen|
+mailbox|Briefkasten|post
+doorbell|Türklingel|klingel
+smoke-detector|Rauchmelder|feuer
+fire-extinguisher|Feuerlöscher|
+fan|Ventilator|lüfter
+air-conditioner|Klimaanlage|kühlen
+thermometer|Thermometer|temperatur
+image-frame|Bilderrahmen|foto
+basket|Korb|einkauf wäschekorb
+archive|Archivbox|kiste lager
+
+[Küche]
+pot|Kochtopf|kochen
+pot-steam|Topf dampfend|kochen suppe
+pot-mix|Rührtopf|kochen
+stove|Herd|ofen kochen
+toaster-oven|Minibackofen|ofen
+toaster|Toaster|
+microwave|Mikrowelle|
+fridge|Kühlschrank|
+snowflake|Gefrierfach|tiefkühl schnee kalt
+dishwasher|Geschirrspüler|spülmaschine
+kettle|Wasserkocher|tee
+coffee-maker|Kaffeemaschine|
+blender|Mixer|
+countertop|Spüle|küchenzeile
+faucet|Wasserhahn|
+silverware-fork-knife|Besteck|messer gabel essen
+silverware|Besteck gekreuzt|messer gabel essen
+silverware-spoon|Löffel|besteck
+silverware-fork|Gabel|besteck
+knife|Küchenmesser|messer
+bowl|Schüssel|
+bowl-mix|Rührschüssel|backen
+grill|Grill|bbq
+chef-hat|Kochmütze|koch
+scale|Waage|küchenwaage
+timer-sand|Sanduhr|zeit eieruhr
+shaker|Salzstreuer|salz gewürz
+cup|Becher|glas
+glass-wine|Weinglas|wein
+glass-mug-variant|Bierglas|bier
+glass-cocktail|Cocktail|bar
+bottle-wine|Weinflasche|wein
+bottle-soda-classic|Getränkeflasche|limo saft
+
+[Lebensmittel]
+food-apple|Apfel|obst
+fruit-cherries|Kirschen|obst
+fruit-citrus|Zitrone|obst orange
+fruit-grapes|Weintrauben|obst
+fruit-pear|Birne|obst
+fruit-pineapple|Ananas|obst
+fruit-watermelon|Wassermelone|obst
+carrot|Karotte|gemüse möhre
+corn|Mais|gemüse
+chili-mild|Chili|gewürz scharf
+mushroom|Pilz|gemüse
+pumpkin|Kürbis|gemüse halloween
+peanut|Erdnuss|nuss
+grain|Getreidekörner|korn mehl
+barley|Getreide|mehl ähre
+sprout|Sprosse|pflanze kräuter
+leaf|Blatt|kräuter tee pflanze
+bread-slice|Brot|backen
+baguette|Baguette|brot
+pretzel|Brezel|
+food-croissant|Croissant|
+egg|Ei|
+egg-fried|Spiegelei|ei
+cheese|Käse|
+cow|Kuh|milch rind tier
+food-steak|Steak|fleisch
+food-drumstick|Hähnchenkeule|fleisch
+sausage|Wurst|fleisch
+fish|Fisch|tier
+pasta|Nudeln|pasta
+rice|Reis|
+noodles|Asia Nudeln|
+pizza|Pizza|
+hamburger|Hamburger|burger
+taco|Taco|
+french-fries|Pommes|
+popcorn|Popcorn|
+cookie|Keks|plätzchen
+cupcake|Cupcake|muffin kuchen
+cake|Torte|kuchen geburtstag
+cake-variant|Geburtstagskuchen|kuchen geburtstag
+muffin|Muffin|kuchen
+candy|Bonbon|süßigkeiten
+ice-cream|Eis|
+ice-pop|Eis am Stiel|
+beehive-outline|Bienenstock|honig
+coffee|Kaffee|tasse
+tea|Tee|tasse
+beer|Bier|
+cup-water|Wasserglas|wasser
+food-variant|Mahlzeit|essen getränk
+food|Fast Food|essen burger getränk
+nutrition|Ernährung|obst
+seed|Samen|saatgut
+baby-bottle|Babyflasche|baby milch
+
+[Werkzeug]
+hammer|Hammer|
+wrench|Schraubenschlüssel|maulschlüssel
+hammer-wrench|Hammer und Schlüssel|werkzeug reparatur
+screwdriver|Schraubendreher|schraubenzieher
+hammer-screwdriver|Hammer und Schraubendreher|werkzeug
+tools|Werkzeug|
+toolbox|Werkzeugkasten|
+pliers|Zange|
+hand-saw|Handsäge|säge
+saw-blade|Sägeblatt|kreissäge
+circular-saw|Kreissäge|säge
+axe|Axt|beil
+pickaxe|Spitzhacke|
+shovel|Schaufel|spaten
+screw-flat-top|Schraube Senkkopf|schrauben
+screw-round-top|Schraube Rundkopf|schrauben
+screw-machine-flat-top|Maschinenschraube|schrauben
+nut|Mutter|schrauben sechskant
+hexagon-outline|Sechskant|mutter inbus
+nail|Nagel|nägel
+tape-measure|Maßband|messen
+ruler|Lineal|messen
+ruler-square|Winkel|messen anschlag
+angle-acute|Spitzer Winkel|messen
+spirit-level|Wasserwaage|
+ladder|Leiter|
+wheel-barrow|Schubkarre|garten bau
+format-paint|Farbroller|malen streichen
+brush|Pinsel|malen
+brush-variant|Malerpinsel|streichen
+palette|Farbpalette|malen farbe
+spray|Spraydose|lack farbe
+cog|Zahnrad|einstellungen mechanik
+cogs|Zahnräder|mechanik
+hook|Haken|
+link-variant|Kette|verbindung
+anvil|Amboss|schmied
+magnet|Magnet|
+gauge|Messgerät|manometer druck
+oil|Öl|schmierung
+water-pump|Pumpe|wasser
+pipe|Rohr|sanitär
+pipe-wrench|Rohrzange|sanitär
+pipe-valve|Ventil|sanitär
+wall|Mauer|ziegel stein
+texture-box|Platte|holz material
+scissors-cutting|Schnittlinie|schere ausschneiden
+content-cut|Schere|schneiden
+tape-drive|Klebebandrolle|band
+safety-goggles|Schutzbrille|
+hard-hat|Schutzhelm|bau
+account-hard-hat|Handwerker|bau
+package-variant-closed|Paket|karton kiste
+package-variant|Paket offen|karton kiste
+package-down|Wareneingang|paket
+cube-outline|Würfelbox|kiste box
+treasure-chest|Schatzkiste|truhe
+tray-full|Ablage voll|sortieren
+dolly|Sackkarre|transport
+forklift|Gabelstapler|lager
+
+[Elektronik]
+battery|Batterie|akku
+battery-charging|Akku laden|batterie
+battery-plus|Batterie Plus|akku
+car-battery|Autobatterie|akku
+power-plug|Netzstecker|strom kabel
+power-socket-de|Steckdose|strom
+power-socket-eu|Steckdose Euro|strom
+flash|Blitz|strom elektrik
+power|Ein Aus|schalter
+toggle-switch|Schalter|
+light-switch|Lichtschalter|
+fuse|Sicherung|strom
+fuse-blade|Flachsicherung|sicherung kfz
+resistor|Widerstand|bauteil
+chip|Chip|bauteil ic
+memory|Prozessor|cpu bauteil
+expansion-card|Steckkarte|grafikkarte
+led-on|LED|bauteil licht
+led-strip-variant|LED Streifen|licht
+current-ac|Wechselstrom|ac
+current-dc|Gleichstrom|dc
+sine-wave|Sinuswelle|signal
+engine|Motor|
+solar-power|Solaranlage|photovoltaik strom
+solar-panel|Solarpanel|photovoltaik
+transmission-tower|Strommast|energie
+cable-data|Datenkabel|kabel
+usb|USB|kabel
+usb-port|USB Anschluss|kabel
+usb-flash-drive|USB Stick|speicher
+ethernet|Netzwerk|lan
+ethernet-cable|Netzwerkkabel|lan kabel
+serial-port|Serieller Anschluss|rs232
+video-input-hdmi|HDMI|kabel
+audio-input-rca|Cinch|kabel
+audio-input-stereo-minijack|Klinke|kabel audio
+lan|LAN|netzwerk
+wifi|WLAN|funk netzwerk
+router-wireless|WLAN Router|netzwerk
+router-network|Router|netzwerk
+access-point|Funk|antenne
+antenna|Antenne|funk
+satellite-uplink|Satellitenschüssel|sat tv
+server|Server|rack
+nas|NAS|speicher
+harddisk|Festplatte|hdd speicher
+sd|SD Karte|speicher
+micro-sd|MicroSD|speicher
+disc|CD|dvd disc
+floppy|Diskette|speicher
+desktop-classic|Computer|pc
+desktop-tower|PC Tower|computer
+laptop|Laptop|notebook
+monitor|Monitor|bildschirm
+tablet|Tablet|
+cellphone|Handy|smartphone
+phone|Telefon|
+keyboard|Tastatur|
+mouse|Computermaus|
+printer|Drucker|
+printer-3d|3D Drucker|
+printer-3d-nozzle|3D Druckdüse|filament
+scanner|Scanner|
+projector|Beamer|
+webcam|Webcam|kamera
+cctv|Überwachungskamera|kamera
+camera|Kamera|foto
+video|Videokamera|film
+television|Fernseher|tv
+television-classic|Röhrenfernseher|tv retro
+remote-tv|Fernbedienung|
+speaker|Lautsprecher|box
+headphones|Kopfhörer|
+microphone|Mikrofon|
+radio|Radio|
+gamepad-variant|Spielecontroller|gamepad konsole
+controller-classic|Gamepad Retro|konsole
+robot|Roboter|
+drone|Drohne|
+watch|Armbanduhr|uhr
+calculator|Taschenrechner|
+flashlight|Taschenlampe|licht
+barcode|Barcode|
+qrcode|QR Symbol|
+
+[Büro]
+file-document|Dokument|datei
+file-document-multiple|Dokumente|datei
+folder|Ordner|
+folder-open|Ordner offen|
+file-cabinet|Aktenschrank|büro
+notebook|Notizbuch|heft
+book-open-variant|Buch offen|lesen
+book|Buch|lesen
+bookmark|Lesezeichen|
+clipboard-text|Klemmbrett|liste
+clipboard-check|Checkliste|liste erledigt
+format-list-checks|Aufgabenliste|todo
+calendar|Kalender|datum termin
+calendar-clock|Termin|kalender
+email|Brief|mail post
+email-open|Brief offen|mail post
+stamper|Stempel|
+pencil|Bleistift|stift
+pen|Kugelschreiber|stift
+fountain-pen-tip|Füller|stift
+marker|Textmarker|stift
+eraser|Radiergummi|
+paperclip|Büroklammer|
+pin|Pinnwandnadel|pin
+note-text|Notiz|zettel
+briefcase|Aktentasche|arbeit
+bag-personal|Rucksack|tasche
+bag-suitcase|Koffer|reise
+tag|Preisschild|etikett
+label|Etikett|schild
+cash|Bargeld|geld
+cash-register|Kasse|geld
+currency-eur|Euro|geld
+piggy-bank|Sparschwein|geld
+credit-card|Bankkarte|geld
+receipt-text|Rechnung|kassenbon beleg
+bank|Bank|geld gebäude
+scale-balance|Recht|justiz waage vertrag
+handshake|Handschlag|vertrag
+chart-line|Diagramm|statistik
+chart-pie|Kreisdiagramm|statistik
+presentation|Präsentation|
+certificate|Zertifikat|urkunde garantie
+file-certificate|Garantie|urkunde
+passport|Reisepass|ausweis
+card-account-details|Ausweis|personalausweis
+safe|Tresor|geld sicher
+shredder|Aktenvernichter|papier
+newspaper|Zeitung|
+bullhorn|Megafon|ankündigung
+
+[Garten & Pflanzen]
+flower|Blume|
+flower-tulip|Tulpe|blume
+flower-poppy|Mohnblume|blume
+tree|Baum|
+pine-tree|Tannenbaum|baum nadelbaum
+palm-tree|Palme|baum urlaub
+forest|Wald|bäume
+cactus|Kaktus|pflanze
+clover|Kleeblatt|glück
+grass|Gras|rasen
+leaf-maple|Ahornblatt|herbst
+watering-can|Gießkanne|
+sprinkler-variant|Rasensprenger|bewässerung
+mower|Rasenmäher|
+fence|Zaun|
+greenhouse|Gewächshaus|
+water|Wassertropfen|wasser gießen
+hydro-power|Wasserkraft|
+barrel|Fass|regentonne
+pool|Schwimmbad|pool
+hot-tub|Whirlpool|
+campfire|Lagerfeuer|camping
+tent|Zelt|camping
+bench|Bank Garten|sitzbank
+umbrella-beach|Sonnenschirm|strand urlaub
+bee|Biene|honig insekt
+bird|Vogel|tier
+
+[Tiere]
+cat|Katze|haustier
+dog|Hund|haustier
+dog-side|Hund seitlich|haustier
+bone|Knochen|hund
+paw|Pfote|haustier tier
+rabbit|Hase|kaninchen
+rodent|Maus|nagetier hamster
+horse|Pferd|
+horse-variant|Pferdekopf|reiten
+pig|Schwein|
+sheep|Schaf|
+donkey|Esel|
+duck|Ente|
+owl|Eule|
+turkey|Truthahn|
+penguin|Pinguin|
+elephant|Elefant|
+panda|Panda|
+koala|Koala|
+teddy-bear|Teddybär|kuscheltier spielzeug
+kangaroo|Känguru|
+turtle|Schildkröte|
+snake|Schlange|
+dolphin|Delfin|
+shark|Hai|
+jellyfish|Qualle|
+fishbowl|Aquarium|fisch
+snail|Schnecke|
+butterfly|Schmetterling|
+ladybug|Marienkäfer|
+spider|Spinne|
+spider-web|Spinnennetz|halloween
+bat|Fledermaus|halloween
+bug|Käfer|insekt
+unicorn|Einhorn|
+egg-easter|Osterei|ostern
+
+[Kinder & Spiel]
+baby-carriage|Kinderwagen|baby
+baby-face|Babygesicht|baby
+baby|Baby|
+human-child|Kind|
+toy-brick|Baustein|spielzeug klötzchen
+puzzle|Puzzle|spielzeug
+dice-5|Würfel|spiel
+dice-multiple|Würfelspiel|spiel brettspiel
+cards-playing|Spielkarten|spiel
+chess-knight|Schach Springer|spiel
+chess-king|Schach König|spiel
+checkerboard|Spielbrett|schach dame
+ferris-wheel|Riesenrad|kirmes
+balloon|Luftballon|geburtstag
+party-popper|Konfetti|party geburtstag
+gift|Geschenk|geburtstag weihnachten
+kite|Drachen|spielzeug
+train|Zug|eisenbahn
+rocket-launch|Rakete|weltraum
+rocket|Rakete stehend|weltraum
+ufo|UFO|weltraum
+alien|Außerirdischer|weltraum
+ghost|Gespenst|halloween
+pirate|Pirat|
+skull-crossbones|Totenkopf Knochen|pirat gift
+ninja|Ninja|
+wizard-hat|Zauberhut|hexe magie
+magic-staff|Zauberstab|magie
+crown|Krone|prinzessin könig
+castle|Burg|schloss ritter
+sword-cross|Schwerter|ritter
+shield|Schild|ritter schutz
+treasure-chest-outline|Schatztruhe|pirat schatz
+map|Landkarte|karte
+map-legend|Schatzkarte|karte
+drama-masks|Theatermasken|verkleiden
+emoticon-happy|Smiley|lachen
+emoticon-cool|Smiley cool|sonnenbrille
+emoticon-excited|Smiley begeistert|lachen
+emoticon-sad|Smiley traurig|
+emoticon-kiss|Smiley Kuss|
+heart|Herz|liebe
+star|Stern|favorit
+star-four-points|Stern vierzackig|funkeln
+creation|Funkeln|magie sterne
+diamond-stone|Diamant|edelstein
+fingerprint|Fingerabdruck|detektiv
+magnify|Lupe|detektiv suchen
+incognito|Geheimagent|detektiv hut brille
+shoe-print|Fußspuren|detektiv schuhe
+handcuffs|Handschellen|polizei detektiv
+binoculars|Fernglas|detektiv
+police-badge|Polizeimarke|detektiv
+snowman|Schneemann|winter
+sunglasses|Sonnenbrille|
+
+[Wissen & Labor]
+flask|Laborkolben|chemie experiment
+flask-round-bottom|Rundkolben|chemie experiment
+test-tube|Reagenzglas|chemie labor
+beaker|Becherglas|chemie labor
+microscope|Mikroskop|labor
+atom|Atom|physik
+molecule|Molekül|chemie
+dna|DNA|biologie
+bacteria|Bakterie|biologie
+virus|Virus|biologie
+brain|Gehirn|denken
+telescope|Teleskop|weltraum
+school|Schulabschluss|hut studium
+bag-personal-outline|Schulranzen|schule tasche
+abacus|Abakus|rechnen mathe
+math-compass|Zirkel|mathe geometrie
+set-square|Geodreieck|mathe geometrie
+function-variant|Funktion|mathe
+pi|Pi|mathe
+calculator-variant|Rechnen|mathe
+earth|Erde|geografie welt
+globe-model|Globus|geografie
+compass|Kompass|richtung
+translate|Sprachen|übersetzen
+alphabetical|Alphabet|buchstaben abc
+music-note|Musiknote|noten
+music|Musik|noten
+guitar-acoustic|Gitarre|musik
+guitar-electric|E-Gitarre|musik
+piano|Klavier|musik
+violin|Geige|musik
+trumpet|Trompete|musik
+saxophone|Saxofon|musik
+movie-open|Film|kino
+filmstrip|Filmstreifen|kino
+theater|Theater|kino
+draw|Zeichnen|malen kunst
+creation-outline|Ideen|kreativ
+lightbulb-group|Lichtideen|lampen
+thought-bubble|Gedankenblase|denken
+chat|Sprechblase|reden
+comment-question|Frage|sprechblase
+
+[Fahrzeuge]
+car|Auto|pkw
+car-side|Auto seitlich|pkw
+car-sports|Sportwagen|auto
+car-estate|Kombi|auto
+car-electric|Elektroauto|auto
+taxi|Taxi|auto
+van-utility|Transporter|lieferwagen
+truck|LKW|lastwagen
+dump-truck|Kipplaster|lkw baustelle
+tow-truck|Abschleppwagen|
+fire-truck|Feuerwehrauto|
+ambulance|Krankenwagen|
+police-station|Polizeiwache|
+bus|Bus|
+tram|Straßenbahn|tram
+train-car|Bahn und Auto|park and ride
+bike|Fahrrad|rad
+bicycle-basket|Fahrrad mit Korb|rad
+moped|Moped|roller
+motorbike|Motorrad|
+scooter|Tretroller|roller
+tractor|Traktor|
+excavator|Bagger|baustelle
+crane|Kran|baustelle
+caravan|Wohnwagen|camping
+rv-truck|Wohnmobil|camping
+airplane|Flugzeug|reise
+helicopter|Hubschrauber|
+sail-boat|Segelboot|schiff
+ferry|Schiff|fähre
+kayaking|Kajak|boot
+anchor|Anker|schiff
+tire|Reifen|auto
+car-tire-alert|Reifendruck|auto
+gas-station|Tankstelle|benzin
+ev-station|Ladestation|elektroauto
+car-key|Autoschlüssel|
+steering|Lenkrad|
+garage|Garage|
+parking|Parkplatz|
+road-variant|Straße|
+traffic-light|Ampel|
+traffic-cone|Verkehrskegel|baustelle pylone
+
+[Sport & Freizeit]
+soccer|Fußball|
+basketball|Basketball|
+volleyball|Volleyball|
+football|American Football|
+tennis|Tennis|
+badminton|Badminton|federball
+table-tennis|Tischtennis|
+golf|Golf|
+hockey-sticks|Hockey|
+baseball-bat|Baseball|
+bowling|Bowling|kegeln
+billiards|Billard|
+dumbbell|Hantel|fitness
+weight-lifter|Gewichtheben|fitness
+run|Laufen|joggen
+walk|Gehen|spazieren
+hiking|Wandern|
+swim|Schwimmen|
+ski|Ski|winter
+snowboard|Snowboard|winter
+skate|Schlittschuh|winter
+sledding|Schlitten|winter
+skateboard|Skateboard|
+rollerblade|Inliner|
+yoga|Yoga|
+karate|Karate|kampfsport
+boxing-glove|Boxhandschuh|
+bow-arrow|Pfeil und Bogen|
+bullseye-arrow|Zielscheibe|dart
+fencing|Fechten|
+whistle|Trillerpfeife|
+trophy|Pokal|gewinn
+medal|Medaille|gewinn
+podium|Siegertreppchen|gewinn
+fish-off|Kein Fisch|allergie
+beach|Strand|urlaub
+image-filter-hdr|Berge|wandern
+bag-checked|Reisegepäck|koffer urlaub
+ticket|Eintrittskarte|ticket
+tshirt-crew|T-Shirt|kleidung
+shoe-sneaker|Turnschuh|kleidung
+shoe-heel|Damenschuh|kleidung
+shoe-formal|Herrenschuh|kleidung
+hat-fedora|Hut|kleidung
+bow-tie|Fliege|kleidung
+tie|Krawatte|kleidung
+glasses|Brille|
+ring|Ring|schmuck
+necklace|Halskette|schmuck
+purse|Handtasche|
+wallet|Geldbeutel|
+umbrella|Regenschirm|
+shoe-ballet|Ballettschuhe|tanzen
+dance-ballroom|Tanzen|
+
+[Gesundheit]
+medical-bag|Arztkoffer|erste hilfe
+hospital-box|Erste Hilfe|krankenhaus kreuz
+pill|Tablette|medikament
+pill-multiple|Tabletten|medikament
+bottle-tonic-plus|Medizin|medikament
+bandage|Pflaster|verband
+heart-pulse|Herzschlag|puls
+stethoscope|Stethoskop|arzt
+thermometer-plus|Fieberthermometer|
+tooth|Zahn|zahnarzt
+eye|Auge|sehen
+ear-hearing|Ohr|hören
+hand-back-right|Hand|stopp
+wheelchair-accessibility|Rollstuhl|barrierefrei
+face-mask|Maske|mundschutz
+lotion|Creme|lotion kosmetik
+lotion-plus|Desinfektion|hygiene
+hair-dryer|Föhn|haare
+razor-double-edge|Rasierklinge|rasieren
+mustache|Schnurrbart|
+lipstick|Lippenstift|kosmetik
+allergy|Allergie|
+needle|Spritze|impfung
+blood-bag|Blutkonserve|
+sleep|Schlaf|
+meditation|Meditation|entspannen
+
+[Wetter & Jahreszeit]
+weather-sunny|Sonne|sommer wetter
+weather-cloudy|Wolke|wetter
+weather-partly-cloudy|Sonne und Wolke|wetter
+weather-rainy|Regen|wetter
+weather-lightning|Gewitter|wetter blitz
+weather-snowy|Schneefall|winter wetter
+weather-night|Mond|nacht
+weather-windy|Wind|wetter
+weather-tornado|Tornado|wetter
+looks|Regenbogen|
+snowflake-variant|Schneeflocke|winter
+fire|Feuer|flamme heiß
+pine-tree-fire|Waldbrand|feuer
+waves|Wellen|meer wasser
+island|Insel|urlaub
+candycane|Zuckerstange|weihnachten
+bell|Glocke|weihnachten alarm
+tree-outline|Laubbaum|baum
+halloween|Halloween Kürbis|kürbis
+firework|Feuerwerk|silvester
+glass-flute|Sektglas|silvester
+cross|Kreuz|kirche
+church|Kirche|
+
+[Gebäude & Orte]
+office-building|Bürogebäude|firma
+factory|Fabrik|
+warehouse|Lager|halle
+store|Laden|geschäft
+cart|Einkaufswagen|einkaufen
+shopping|Einkaufstasche|einkaufen
+barn|Scheune|bauernhof
+home-city|Stadt|häuser
+hospital-building|Krankenhaus|
+school-outline|Schule|
+bridge|Brücke|
+lighthouse|Leuchtturm|
+stairs|Treppe|keller
+stairs-up|Treppe hoch|dachboden
+stairs-down|Treppe runter|keller
+elevator|Aufzug|
+home-roof|Dachboden|dach
+home-floor-0|Erdgeschoss|stockwerk
+home-floor-1|Erster Stock|stockwerk
+home-floor-2|Zweiter Stock|stockwerk
+home-floor-b|Keller|stockwerk
+door-sliding|Schiebetür|
+gate|Tor|garten
+map-marker|Standort|ort
+flag|Flagge|fahne
+sign-direction|Wegweiser|schild
+desk|Arbeitszimmer|schreibtisch
+exit-run|Notausgang|flucht
+
+[Hinweise & Warnungen]
+alert|Warnung|achtung
+alert-octagon|Stopp Warnung|achtung
+alert-circle|Wichtig|achtung hinweis
+information|Information|hinweis
+help-circle|Hilfe|frage
+check-bold|Haken gesetzt|ok erledigt
+check-circle|Erledigt|ok
+close-thick|X|falsch nein
+close-circle|Falsch|nein
+cancel|Verboten|nicht
+minus-circle|Durchfahrt verboten|nein
+plus-thick|Plus|mehr
+minus-thick|Minus|weniger
+radioactive|Radioaktiv|gefahr
+biohazard|Biogefahr|gefahr
+skull|Totenkopf|gift gefahr
+flash-triangle|Hochspannung|strom gefahr
+fire-alert|Feuergefahr|brennbar
+water-alert|Wasserschaden|
+snowflake-alert|Frostgefahr|kälte
+smoking-off|Rauchen verboten|
+cellphone-off|Handy verboten|
+food-off|Essen verboten|
+camera-off|Fotografieren verboten|
+dog-side-off|Hunde verboten|
+hand-back-right-off|Nicht berühren|verboten
+peanut-off|Ohne Nüsse|allergie
+barley-off|Glutenfrei|
+leaf-circle|Vegan|vegetarisch bio
+glass-fragile|Zerbrechlich|glas
+arrow-up-bold|Pfeil hoch|oben
+arrow-down-bold|Pfeil runter|unten
+arrow-left-bold|Pfeil links|
+arrow-right-bold|Pfeil rechts|
+arrow-up-bold-box|Oben|pfeil
+swap-horizontal-bold|Tauschen|pfeile
+refresh|Wiederholen|neu
+eye-off|Geheim|nicht schauen
+lock-alert|Gesichert|schloss
+shield-check|Geprüft|sicher
+shield-lock|Privat|sicher
+account|Person|benutzer
+account-group|Gruppe|familie personen
+account-child|Eltern und Kind|familie
+human-male-female|Mann und Frau|toilette
+human-male|Mann|herren
+human-female|Frau|damen
+human-wheelchair|Barrierefrei|rollstuhl
+wheelchair|Rollstuhlfahrer|barrierefrei
+thumb-up|Daumen hoch|gut
+thumb-down|Daumen runter|schlecht
+clock-alert|Läuft ab|frist haltbar
+calendar-alert|Ablaufdatum|haltbar frist
+calendar-check|Geprüft am|datum
+timer|Stoppuhr|zeit
+volume-off|Leise|ruhe
+vibrate|Vibration|
+speedometer|Tacho|geschwindigkeit
+weight|Gewicht|
+weight-kilogram|Kilogramm|gewicht
+numeric-1-circle|Nummer 1|zahl
+numeric-2-circle|Nummer 2|zahl
+numeric-3-circle|Nummer 3|zahl
+numeric-4-circle|Nummer 4|zahl
+numeric-5-circle|Nummer 5|zahl
+numeric-6-circle|Nummer 6|zahl
+numeric-7-circle|Nummer 7|zahl
+numeric-8-circle|Nummer 8|zahl
+numeric-9-circle|Nummer 9|zahl

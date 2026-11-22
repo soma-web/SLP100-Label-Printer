@@ -4,4 +4,9 @@ The SLP printer command set in slplabel/protocol.py is derived from
 LPrint (https://github.com/michaelrsweet/lprint), file lprint-sii.c,
 Copyright (c) 2023-2026 by Michael R Sweet, Apache License 2.0.
 
+The icons in slplabel/icons/set are made from Material Design Icons by
+Pictogrammers (https://pictogrammers.com/library/mdi/), version 7.4.47,
+Apache License 2.0. They were converted to black/white PNG files, see
+tools/build_icons.py.
+
 This project is not affiliated with Seiko Instruments Inc.

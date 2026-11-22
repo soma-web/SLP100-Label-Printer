@@ -170,7 +170,7 @@ def create_app(service: Service) -> Guard:
     def info(_r, _b):
         return {"version": __version__, "fonts": render.available_fonts(),
                 "media": [{"name": n, "width": w, "length": ln} for n, w, ln in render.MEDIA],
-                "icons": [{"name": n, "own": p.parent == service.icon_dir} for n, p in service.icons().items()],
+                "icons": service.icon_list(),
                 "settings": service.settings.model_dump(), "max_copies": service.config.max_copies,
                 "password_set": bool(service.config.password)}
 
@@ -208,7 +208,10 @@ def create_app(service: Service) -> Guard:
 
     def icon_file(r, _b):
         path = service.icons().get(r.path_params["name"])
-        return FileResponse(path, media_type="image/png") if path else JSONResponse({"error": "Nicht gefunden"}, 404)
+        if not path:
+            return JSONResponse({"error": "Nicht gefunden"}, 404)
+        cache = "no-cache" if path.parent == service.icon_dir else "max-age=86400"
+        return FileResponse(path, media_type="image/png", headers={"cache-control": cache})
 
     def add_icon(_r, body):
         return {"name": service.add_icon(body.get("name"), str(body.get("image") or ""))}

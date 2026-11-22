@@ -25,15 +25,20 @@
         <div class="card">
           <h2>Inhalt</h2>
           <label for="text">Text (eine Zeile pro Zeile)</label>
-          <textarea id="text">Hallo Welt</textarea>
+          <textarea id="text" placeholder="Hier den Text für das Etikett eingeben …" autocomplete="off"></textarea>
           <label>Grafik</label>
           <div class="seg" id="gmode">
             <button data-v="none" class="on">Keine</button><button data-v="icon">Icon</button>
             <button data-v="qr">QR-Code</button><button data-v="image">Bild</button>
           </div>
           <div id="icon-box" class="hidden">
-            <label>Icon auswählen</label>
+            <div class="row">
+              <div><label for="icon-search">Icon suchen</label>
+                <input id="icon-search" type="search" placeholder="z. B. Schraube" autocomplete="off"></div>
+              <div><label for="icon-cat">Kategorie</label><select id="icon-cat"></select></div>
+            </div>
             <div class="icons" id="icons"></div>
+            <p class="hint" id="icon-hint"></p>
           </div>
           <div id="qr-box" class="hidden">
             <label for="qr">QR-Inhalt (Text oder URL)</label>
@@ -81,7 +86,7 @@
           <label for="media">Etikettengröße</label>
           <select id="media"></select>
           <label for="length">Länge (mm, 0 = automatisch)</label>
-          <input id="length" type="number" min="0" max="300" value="0">
+          <input id="length" type="number" min="0" max="300" value="83">
           <p class="hint">Der Druckbereich ist 24 mm hoch, der Text läuft in Längsrichtung.</p>
         </div>
       </div>

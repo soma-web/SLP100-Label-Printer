@@ -39,8 +39,11 @@ def build_mcp(service: Service) -> MCPServer:
 
     @mcp.tool()
     async def list_resources_for_labels() -> dict:
-        """List the available templates, icons and fonts."""
-        return {"templates": sorted(service.templates()), "icons": sorted(service.icons()),
+        """List the available templates, icons (by category) and fonts."""
+        icons = {}
+        for i in service.icon_list():
+            icons.setdefault(i["category"], []).append(i["name"])
+        return {"templates": sorted(service.templates()), "icons": icons,
                 "fonts": render.available_fonts(),
                 "label_sizes_mm": [{"name": n, "height": w, "length": ln} for n, w, ln in render.MEDIA]}
 

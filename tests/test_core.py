@@ -130,6 +130,32 @@ def test_icons(service):
     assert name not in service.icons()
 
 
+def test_icon_set(service):
+    index = render.icon_index()
+    assert len(index) > 500
+    assert {p.stem for p in render.ICON_SET.glob("*.png")} == set(index)
+    icons = service.icon_list()
+    assert [i["name"] for i in icons[:2]] == ["detektiv", "labor"]
+    assert len(icons) == len(index) + 2 and all(i["label"] and i["category"] for i in icons)
+    assert next(i for i in icons if i["name"] == "schluessel")["label"] == "Schlüssel"
+    with pytest.raises(LabelError):
+        service.add_icon("katze", data_url(Image.new("L", (20, 20))))
+    service.print_label(LabelSpec(icon="katze", lines=["Mia"], length_mm=83))
+
+
+def test_own_icon_with_name_of_the_set_stays(service):
+    Image.new("L", (20, 20)).save(service.icon_dir / "katze.png")   # saved by an older version
+    (first, *rest) = service.icon_list()
+    assert first["name"] == "katze" and first["own"] and "katze" not in [i["name"] for i in rest]
+    service.delete_icon("katze")
+    assert service.icons()["katze"].parent == render.ICON_SET
+
+
+def test_default_label_is_small_address(service):
+    assert service.settings.default_length_mm == 83
+    assert LabelSpec().length_mm == 0        # saved templates rely on this default
+
+
 def test_settings_persist_and_validate(service):
     service.update_settings({"density": 3, "unknown": 1})
     assert Service(service.config).settings.density == 3

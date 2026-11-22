@@ -7,7 +7,7 @@ und MCP-Server in einem Docker-Container.
 discontinued SII Smart Label Printer 100. No vendor driver or CUPS required.*
 
 - **Treiber im Container:** spricht den Drucker direkt über USB an, ohne CUPS und ohne Herstellertreiber
-- **Weboberfläche:** Text, Icons, Bilder, QR-Codes, Vorlagen, Live-Vorschau Punkt für Punkt
+- **Weboberfläche:** Text, über 700 Icons mit Suche, Bilder, QR-Codes, Vorlagen, Live-Vorschau Punkt für Punkt
 - **MCP-Server:** KI-Assistenten wie Claude können Etiketten entwerfen, ansehen und drucken
 
 > Geprüft mit einem SLP100 an einer Debian-13-VM unter Proxmox (amd64). Andere Modelle der SLP-Reihe
@@ -93,9 +93,12 @@ python -m venv .venv && .venv/bin/pip install -r requirements-dev.txt
 .venv/bin/python dev_mock.py     # http://127.0.0.1:8111 mit simuliertem Drucker
 ```
 
+Iconset ändern: `tools/icons.txt` bearbeiten und `tools/build_icons.py` ausführen.
+
 Image selbst bauen: `docker compose -f compose.yaml -f compose.build.yaml up -d --build`
 
 ## Lizenz
 
 Apache License 2.0. Die Druckbefehle stammen aus [LPrint](https://github.com/michaelrsweet/lprint),
-siehe [NOTICE](NOTICE). Das Projekt gehört nicht zu Seiko Instruments.
+das Iconset aus [Material Design Icons](https://pictogrammers.com/library/mdi/),
+beide Apache License 2.0, siehe [NOTICE](NOTICE). Das Projekt gehört nicht zu Seiko Instruments.

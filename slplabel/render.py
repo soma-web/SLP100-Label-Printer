@@ -3,6 +3,7 @@
 import base64
 import binascii
 import io
+import json
 import os
 from functools import lru_cache
 from pathlib import Path
@@ -32,6 +33,8 @@ ALIASES = {
     "Verdana": "DejaVu Sans", "Tahoma": "DejaVu Sans", "Segoe UI": "Open Sans",
     "Calibri": "Open Sans", "Bahnschrift": "Open Sans", "Impact": "Liberation Sans",
 }
+# Pure black/white drawings with index.json (German labels), see tools/build_icons.py
+ICON_SET = Path(__file__).parent / "icons" / "set"
 MEDIA = [("Adresse klein", 24, 83), ("Mehrzweck", 24, 44)]
 
 
@@ -116,6 +119,11 @@ def _font(name: str, bold: bool, size: int):
 
 
 # -- graphics ----------------------------------------------------------------
+@lru_cache(maxsize=1)
+def icon_index() -> dict[str, dict]:
+    return json.loads((ICON_SET / "index.json").read_text(encoding="utf-8"))
+
+
 def _flatten(img: Image.Image) -> Image.Image:
     img = img.convert("RGBA")
     return Image.alpha_composite(Image.new("RGBA", img.size, "white"), img).convert("L")
@@ -195,6 +203,8 @@ def render(spec: LabelSpec, icons: dict[str, Path] | None = None, default_font: 
         if spec.image_rotate:
             graphic = graphic.rotate(-90 * spec.image_rotate, expand=True, fillcolor=255)
         graphic = ImageOps.contain(graphic, (inner_w or mm_to_dots(300), g_h))
+        if spec.icon and path.parent == ICON_SET:    # clean edges instead of dithering
+            graphic = graphic.point(lambda v: 255 if v >= 128 else 0)
     g_w = graphic.width + (gap if lines else 0) if graphic else 0
 
     # text block
