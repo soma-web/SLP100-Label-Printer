@@ -59,6 +59,7 @@ class UsbPrinter:
     node: Path
     interface: int
     ep_out: int
+    ep_in: int | None
     product: str
 
     @property
@@ -80,13 +81,14 @@ def find_printers(vid: str, pid: str) -> list[UsbPrinter]:
         for intf in sorted(dev.glob("*:*")):
             if _read(intf / "bInterfaceClass") != "07":
                 continue
-            ep_out = next((int(ep.name[3:], 16) for ep in sorted(intf.glob("ep_*"))
-                           if _read(ep / "type") == "Bulk" and _read(ep / "direction") == "out"), None)
+            eps = {_read(ep / "direction"): int(ep.name[3:], 16) for ep in sorted(intf.glob("ep_*"))
+                   if _read(ep / "type") == "Bulk"}
+            ep_out = eps.get("out")
             if ep_out is None:
                 continue
             node = DEVFS / f"{int(_read(dev / 'busnum')):03d}" / f"{int(_read(dev / 'devnum')):03d}"
             found.append(UsbPrinter(dev, node, int(_read(intf / "bInterfaceNumber"), 16), ep_out,
-                                    _read(dev / "product") or "USB printer"))
+                                    eps.get("in"), _read(dev / "product") or "USB printer"))
             break
     return found
 
@@ -132,6 +134,24 @@ class UsbfsConnection:
             sent = fcntl.ioctl(self.fd, USBDEVFS_BULK, req)
             if sent != len(chunk):
                 raise OSError(errno.EIO, f"short USB write ({sent}/{len(chunk)})")
+
+    def status_byte(self) -> int | None:
+        """SLP status byte. The printer queues replies, so old ones are skipped."""
+        if self.dev.ep_in is None:
+            return None
+        last = None
+        for _ in range(3):
+            buf = ctypes.create_string_buffer(64)
+            req = _Bulk(self.dev.ep_in, 64, 300, ctypes.cast(buf, ctypes.c_void_p))
+            try:
+                n = fcntl.ioctl(self.fd, USBDEVFS_BULK, req)
+            except OSError as e:
+                if e.errno == errno.ETIMEDOUT:
+                    break
+                raise
+            if n:
+                last = buf.raw[0]
+        return last
 
     def close(self):
         try:

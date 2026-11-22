@@ -16,6 +16,9 @@ except ImportError:
     fcntl = None
 
 LPGETSTATUS = 0x060B
+# Observed on real hardware: 0x50 = ready, 0x52 = labels jammed. Other values
+# (0x51 was seen on a printer that then printed fine) are only reported.
+STATUS_JAM = 0x02
 
 
 class PrinterError(RuntimeError):
@@ -32,6 +35,19 @@ class _UsblpConnection:
         buf = bytearray(4)
         fcntl.ioctl(self.fd, LPGETSTATUS, buf)
         return struct.unpack("i", buf)[0] & 0xFF
+
+    def status_byte(self):
+        last = None
+        for _ in range(3):
+            if not select.select([self.fd], [], [], 0.3)[0]:
+                break
+            try:
+                data = os.read(self.fd, 64)
+            except BlockingIOError:
+                break
+            if data:
+                last = data[0]
+        return last
 
     def _wait(self, timeout_ms):
         if not select.select([], [self.fd], [], timeout_ms / 1000)[1]:
@@ -64,6 +80,10 @@ class _MockConnection:
     def port_status(self):
         return self.printer.mock_status
 
+    def status_byte(self):
+        seq = self.printer.mock_bytes
+        return seq.pop(0) if len(seq) > 1 else seq[0]
+
     def write(self, data, timeout_ms=15000):
         if self.printer.mock_error:
             raise self.printer.mock_error
@@ -85,6 +105,8 @@ class Printer:
         self.lock = threading.Lock()
         self._resync = False
         self.mock_labels, self.mock_status, self.mock_error = [], 0x18, None
+        self.mock_bytes = [0x50]
+        self.jam_wait = 10.0           # seconds a fault may last before a job is refused
 
     # -- transport ---------------------------------------------------------
     def _open(self):
@@ -101,12 +123,14 @@ class Printer:
 
     @staticmethod
     def _explain(e: OSError) -> PrinterError:
+        lost = ("Die USB-Verbindung zum Drucker ist abgebrochen. Kabel (möglichst ohne Verlängerung), "
+                "USB-Anschluss und Netzteil prüfen.")
         return PrinterError({
             errno.EACCES: "Kein Zugriff auf den Drucker (Rechte bzw. Gruppe lp prüfen).",
             errno.EPERM: "Docker verweigert den USB-Zugriff (device_cgroup_rules prüfen).",
             errno.EBUSY: "Der Drucker wird gerade von einem anderen Programm benutzt.",
             errno.ETIMEDOUT: "Der Drucker nimmt keine Daten an (Etiketten eingelegt, Klappe zu?).",
-            errno.ENODEV: "Der Drucker wurde getrennt.",
+            errno.ENODEV: lost, errno.ESHUTDOWN: lost, errno.EPROTO: lost, errno.EILSEQ: lost, errno.EIO: lost,
             errno.ENOENT: "Der USB-Anschluss ist im Container nicht sichtbar (/dev/bus/usb einbinden).",
         }.get(e.errno, f"USB-Fehler: {e.strerror or e}"))
 
@@ -117,6 +141,23 @@ class Printer:
         if not status & 0x08:
             raise PrinterError("Der Drucker meldet einen Fehler (Klappe offen oder Papierstau?).")
 
+    @staticmethod
+    def _check_byte(byte: int | None):
+        if byte is not None and byte & STATUS_JAM:
+            raise PrinterError(f"Der Drucker meldet eine Störung (Status 0x{byte:02x}). Klemmt ein Etikett?")
+
+    def _check_before_job(self, conn):
+        self._check(conn.port_status())
+        end = time.monotonic() + self.jam_wait
+        while True:
+            byte = conn.status_byte()
+            try:
+                return self._check_byte(byte)
+            except PrinterError:
+                if time.monotonic() >= end:
+                    raise
+            time.sleep(0.5)
+
     # -- public API --------------------------------------------------------
     def status(self) -> dict:
         if not self.lock.acquire(timeout=0.3):
@@ -125,10 +166,13 @@ class Printer:
             conn, product = self._open()
             with conn:
                 st = conn.port_status()
+                byte = conn.status_byte()
             out = {"connected": True, "ready": True, "busy": False, "product": product,
-                   "port_status": f"0x{st:02x}", "message": "Bereit"}
+                   "port_status": f"0x{st:02x}",
+                   "status_byte": None if byte is None else f"0x{byte:02x}", "message": "Bereit"}
             try:
                 self._check(st)
+                self._check_byte(byte)
             except PrinterError as e:
                 out.update(ready=False, message=str(e))
             return out
@@ -156,7 +200,7 @@ class Printer:
     def _send(self, job: bytes):
         conn, _ = self._open()
         with conn:
-            self._check(conn.port_status())
+            self._check_before_job(conn)
             if self._resync:
                 # A previous job broke off: NOPs complete a half-sent raster
                 # row, the form feed ejects the spoilt label.

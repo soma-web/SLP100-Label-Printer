@@ -10,8 +10,8 @@ discontinued SII Smart Label Printer 100. No vendor driver or CUPS required.*
 - **Weboberfläche:** Text, Icons, Bilder, QR-Codes, Vorlagen, Live-Vorschau Punkt für Punkt
 - **MCP-Server:** KI-Assistenten wie Claude können Etiketten entwerfen, ansehen und drucken
 
-> Stand 0.1: USB-Erkennung und Status sind mit echtem Drucker geprüft, der Druck aus dem Container
-> bisher nur mit dem Simulator.
+> Geprüft mit einem SLP100 an einer Debian-13-VM unter Proxmox (amd64). Andere Modelle der SLP-Reihe
+> werden nicht unterstützt, arm64 ist gebaut, aber nicht mit Drucker getestet.
 
 ## Voraussetzungen
 
@@ -81,6 +81,8 @@ Schreiben kann er nur auf USB-Geräte, die der Gruppe `LP_GID` gehören oder fü
 |---|---|
 | Drucker nicht gefunden | Eingeschaltet? Zeigt `lsusb` auf dem Host `0619:0103`? |
 | Kein Zugriff auf den Drucker | `ls -ln /dev/bus/usb/*/*` ansehen und `LP_GID` anpassen |
+| USB-Verbindung abgebrochen | Verlängerungskabel weglassen, anderen Anschluss und das Netzteil prüfen. Bei uns brach der Druck mit Verlängerung beim Druckstart ab und lief direkt angesteckt durch |
+| Der Drucker meldet eine Störung | Klappe öffnen, Etikettenstau beseitigen |
 | Wird von einem anderen Programm benutzt | Drucker in CUPS o. Ä. entfernen |
 
 ## Entwicklung

@@ -180,7 +180,7 @@ async function refreshStatus() {
     $('#sdot').className = 'dot ' + (!s.connected ? 'err' : s.ready ? 'ok' : 'warn');
     $('#stext').textContent = s.message;
     $('#pinfo').textContent = s.connected
-      ? `${s.product || 'SLP100'}: ${s.message}` + (s.port_status ? ` (Portstatus ${s.port_status})` : '') + ' · 203 dpi, 192 Punkte (24 mm)'
+      ? `${s.product || 'SLP100'}: ${s.message}` + (s.port_status ? ` (Port ${s.port_status}, Status ${s.status_byte || '–'})` : '') + ' · 203 dpi, 192 Punkte (24 mm)'
       : s.message;
   } catch { $('#sdot').className = 'dot err'; $('#stext').textContent = 'Server nicht erreichbar'; }
 }

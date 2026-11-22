@@ -156,6 +156,30 @@ def test_paper_out_and_error_bits():
         p.feed()
 
 
+def test_jam_is_shown_and_refused_but_short_faults_are_waited_out():
+    p = Printer("mock")
+    p.jam_wait = 0
+    p.mock_bytes = [0x52]
+    s = p.status()
+    assert s["connected"] and not s["ready"] and "0x52" in s["message"]
+    with pytest.raises(PrinterError, match="Störung"):
+        p.feed()
+    p.jam_wait, p.mock_bytes = 5, [0x52, 0x50]
+    p.feed()
+    for byte in (0x50, 0x51, None):          # must never block printing
+        p.jam_wait, p.mock_bytes = 0, [byte]
+        assert p.status()["ready"]
+        p.feed()
+
+
+@pytest.mark.parametrize("code", [errno.ENODEV, errno.ESHUTDOWN, errno.EPROTO, errno.EIO])
+def test_lost_usb_connection_has_clear_message(code):
+    p = Printer("mock")
+    p.mock_error = OSError(code, "Cannot send after transport endpoint shutdown")
+    with pytest.raises(PrinterError, match="Verlängerung"):
+        p.feed()
+
+
 def test_broken_job_is_resynced_and_reports_copies():
     p = Printer("mock")
     job = protocol.to_job(Image.new("1", (10, protocol.DOTS), 0))
@@ -202,4 +226,4 @@ def test_finds_printer_in_sysfs(tmp_path, monkeypatch):
     monkeypatch.setattr(usbfs, "SYSFS", tmp_path)
     (p,) = usbfs.find_printers("0619", "0103")
     assert p.node.as_posix() == "/dev/bus/usb/002/014"
-    assert (p.interface, p.ep_out, p.driver) == (0, 2, "usblp")
+    assert (p.interface, p.ep_out, p.ep_in, p.driver) == (0, 2, 0x81, "usblp")
