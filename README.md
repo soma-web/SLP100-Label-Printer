@@ -82,6 +82,7 @@ Schreiben kann er nur auf USB-Geräte, die der Gruppe `LP_GID` gehören oder fü
 | Drucker nicht gefunden | Eingeschaltet? Zeigt `lsusb` auf dem Host `0619:0103`? |
 | Kein Zugriff auf den Drucker | `ls -ln /dev/bus/usb/*/*` ansehen und `LP_GID` anpassen |
 | USB-Verbindung abgebrochen | Verlängerungskabel weglassen, anderen Anschluss und das Netzteil prüfen. Bei uns brach der Druck mit Verlängerung beim Druckstart ab und lief direkt angesteckt durch |
+| Druck läuft auf das nächste Etikett über oder ein leeres Etikett kommt mit | Unter **Einstellungen → Etikettenlänge kalibrieren** das Lineal drucken und die Werte eintragen |
 | Der Drucker meldet eine Störung | Klappe öffnen, Etikettenstau beseitigen |
 | Wird von einem anderen Programm benutzt | Drucker in CUPS o. Ä. entfernen |
 

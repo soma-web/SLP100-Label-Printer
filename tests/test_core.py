@@ -39,8 +39,9 @@ def test_printed_dots_equal_preview(service, kw):
     spec = LabelSpec(**kw)
     img, _ = service.render(spec)
     service.print_label(spec)
-    got = service.printer.mock_labels[-1]
-    assert got.size == img.size and got.tobytes() == img.tobytes()
+    got = service.printer.mock_labels[-1]            # trailing blank lines are not fed
+    assert got.tobytes() == img.crop((0, 0, got.width, img.height)).tobytes()
+    assert img.crop((got.width, 0, img.width, img.height)).getextrema() in ((255, 255), None)
 
 
 def test_orientation_in_raw_stream():
@@ -56,6 +57,41 @@ def test_long_blank_runs_use_valid_counts():
     img.putpixel((999, 5), 0)
     (decoded,) = protocol.decode_job(protocol.to_job(img))
     assert decoded.size == img.size and decoded.tobytes() == img.tobytes()
+
+
+def test_no_feed_after_the_last_printed_line_but_lead_before_the_first():
+    img = Image.new("1", (600, protocol.DOTS), 1)
+    img.putpixel((100, 5), 0)
+    job = protocol.to_job(img, lead=300)
+    assert job[-1] == protocol.CMD_FORMFEED
+    assert job[-27:-25] == bytes([protocol.CMD_PRINT, 24])          # last raster row, then eject
+    (decoded,) = protocol.decode_job(job)
+    assert decoded.width == 401 and decoded.getpixel((400, 5)) == 0
+
+
+def test_labels_never_run_over_the_usable_length(service):
+    service.update_settings({"label_start_mm": 2, "label_end_mm": 80})
+    fixed, warn = service.render(LabelSpec(lines=["Hallo"], length_mm=83, frame="thick"))
+    assert fixed.width == render.mm_to_dots(78) and not warn
+    long, warn = service.render(LabelSpec(lines=["Ein sehr langer Text ohne feste Länge"], size_pt=40))
+    assert long.width == render.mm_to_dots(78) and warn
+    short, _ = service.render(LabelSpec(lines=["Hi"], length_mm=44))
+    assert short.width == render.mm_to_dots(44)
+    service.print_label(LabelSpec(lines=["Hallo"], length_mm=83, frame="thick"))
+    printed = service.printer.mock_labels[-1]
+    lead = render.mm_to_dots(2)
+    assert printed.crop((0, 0, lead, protocol.DOTS)).getextrema() == (255, 255)
+    assert printed.width == lead + fixed.convert("L").point(lambda v: 255 - v).getbbox()[2]
+    with pytest.raises(LabelError):
+        service.update_settings({"label_start_mm": 10, "label_end_mm": 15})
+
+
+def test_length_ruler_is_longer_than_a_label(service):
+    img = render.length_ruler_image()
+    assert img.width == render.mm_to_dots(100)
+    service.update_settings({"label_start_mm": 3})
+    service.print_calibration("length")
+    assert service.printer.mock_labels[-1].getpixel((0, 0)) == 0      # no start offset
 
 
 @pytest.mark.parametrize("scale", [0.3, 0.5, 0.6, 0.75, 0.9, 1.0])

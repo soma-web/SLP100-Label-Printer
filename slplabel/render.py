@@ -171,8 +171,16 @@ def qr_image(text: str, size: int) -> Image.Image:
 
 # -- layout ------------------------------------------------------------------
 def render(spec: LabelSpec, icons: dict[str, Path] | None = None, default_font: str = "",
-           area_top_mm: float = 0, area_bottom_mm: float = 0) -> tuple[Image.Image, list[str]]:
-    """Render a label. Returns (1-bit image exactly as printed, warnings)."""
+           area_top_mm: float = 0, area_bottom_mm: float = 0,
+           max_length_mm: float = 0) -> tuple[Image.Image, list[str]]:
+    """Render a label. Returns (1-bit image exactly as printed, warnings).
+
+    max_length_mm is the usable length of one label: longer labels are shortened,
+    so a print never runs over onto the next label.
+    """
+    args = (icons, default_font, area_top_mm, area_bottom_mm, max_length_mm)
+    if max_length_mm and spec.length_mm > max_length_mm:
+        return render(spec.model_copy(update={"length_mm": max_length_mm}), *args)
     warnings = []
     lines = list(spec.lines)
     while lines and not lines[-1].strip():
@@ -247,6 +255,9 @@ def render(spec: LabelSpec, icons: dict[str, Path] | None = None, default_font: 
 
     if not length:
         length = max(int(2 * margin_x + g_w + text_w) + mm_to_dots(2), mm_to_dots(10))
+        if max_length_mm and length > mm_to_dots(max_length_mm):
+            img, warnings = render(spec.model_copy(update={"length_mm": max_length_mm}), *args)
+            return img, ["Der Inhalt ist länger als ein Etikett und wurde verkleinert."] + warnings
         if length > mm_to_dots(300):
             raise LabelError("Das Etikett würde länger als 300 mm.")
 
@@ -313,6 +324,24 @@ def calibration_image() -> Image.Image:
             ty = min(max(y, 7), DOTS - 8)        # keep 0 and 24 readable
             for x in (8, 20):
                 d.text((mm_to_dots(x), ty), str(k), font=font, fill=0, anchor="lm")
+    return img.convert("1")
+
+
+def length_ruler_image() -> Image.Image:
+    """Ruler along the label, 0 at the first printed line. Runs onto the next label."""
+    length = mm_to_dots(100)
+    img = Image.new("L", (length, DOTS), 255)
+    d = ImageDraw.Draw(img)
+    d.fontmode = "1"
+    font = _font("Liberation Sans", True, 26)
+    for k in range(101):
+        x = min(mm_to_dots(k), length - 2)
+        tick = 96 if k % 10 == 0 else 60 if k % 5 == 0 else 34
+        width = 3 if k % 5 == 0 else 2
+        d.rectangle([x, 0, x + width - 1, tick], fill=0)
+        d.rectangle([x, DOTS - 1 - tick // 2, x + width - 1, DOTS - 1], fill=0)
+        if k % 5 == 0 and 0 < k < 100:
+            d.text((x, 128), str(k), font=font, fill=0, anchor="mm")
     return img.convert("1")
 
 

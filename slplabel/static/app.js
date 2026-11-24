@@ -198,6 +198,8 @@ function fillSettings() {
   setSeg('#density', s.density); $('#fine').checked = s.fine;
   $('#dfont').value = s.default_font; if (!$('#dfont').value) $('#dfont').selectedIndex = 0;
   $('#dlen').value = s.default_length_mm;
+  $('#len-from').value = s.label_start_mm; $('#len-to').value = s.label_end_mm;
+  $('#usable').textContent = +(s.label_end_mm - s.label_start_mm).toFixed(1);
   $('#cal-from').value = s.area_top_mm; $('#cal-to').value = 24 - s.area_bottom_mm;
   $('#mcp-on').checked = s.mcp_enabled; $('#mcp-box').classList.toggle('hidden', !s.mcp_enabled);
   $('#nopw').classList.toggle('hidden', state.info.password_set);
@@ -272,6 +274,11 @@ async function init() {
   $('#import-file').onchange = guarded(importTemplates);
   $('#refresh').onclick = refreshStatus;
   $('#calib').onclick = guarded(async () => { await api('/api/calibrate', 'POST'); toast('Kalibrier-Etikett gedruckt'); });
+  $('#lcalib').onclick = guarded(async () => {
+    if (!confirm('Das Längen-Lineal braucht zwei Etiketten. Drucken?')) return;
+    await api('/api/calibrate', 'POST', { kind: 'length' }); toast('Längen-Lineal gedruckt');
+  });
+  $('#save-len').onclick = guarded(() => saveSettings({ label_start_mm: num('#len-from'), label_end_mm: num('#len-to', 83) }));
   $('#save-cal').onclick = guarded(() => saveSettings({ area_top_mm: num('#cal-from'), area_bottom_mm: 24 - num('#cal-to', 24) }));
   $('#save-print').onclick = guarded(() => saveSettings({
     density: parseInt($('#density .on')?.dataset.v ?? 1), fine: $('#fine').checked,

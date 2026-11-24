@@ -30,6 +30,9 @@ class Settings(BaseModel):
     default_length_mm: float = Field(83, ge=0, le=300)
     area_top_mm: float = Field(0, ge=0, le=10)
     area_bottom_mm: float = Field(0, ge=0, le=10)
+    # along the label (from the length ruler): first and last usable mm
+    label_start_mm: float = Field(0, ge=0, le=20)
+    label_end_mm: float = Field(83, ge=10, le=300)
     mcp_enabled: bool = False
 
 
@@ -76,6 +79,8 @@ class Service:
     def update_settings(self, changes: dict) -> Settings:
         with self.lock:
             new = Settings(**{**self.settings.model_dump(), **changes})
+            if new.label_end_mm - new.label_start_mm < 10:
+                raise LabelError("Der nutzbare Bereich muss mindestens 10 mm lang sein.")
             self._save("settings.json", new.model_dump())
             self.settings = new
             return new
@@ -169,7 +174,17 @@ class Service:
     # -- labels ------------------------------------------------------------
     def render(self, spec: LabelSpec):
         s = self.settings
-        return render.render(spec, self.icons(), s.default_font, s.area_top_mm, s.area_bottom_mm)
+        return render.render(spec, self.icons(), s.default_font, s.area_top_mm, s.area_bottom_mm,
+                             self.usable_length_mm)
+
+    @property
+    def usable_length_mm(self) -> float:
+        return self.settings.label_end_mm - self.settings.label_start_mm
+
+    def _job(self, img, density=None, fine=None) -> bytes:
+        s = self.settings
+        return to_job(img, s.density if density is None else density, s.fine if fine is None else fine,
+                      render.mm_to_dots(s.label_start_mm))
 
     def print_label(self, spec: LabelSpec, copies: int = 1, density=None, fine=None, limit=None) -> dict:
         limit = limit or self.config.max_copies
@@ -178,10 +193,13 @@ class Service:
         if not (any(t.strip() for t in spec.lines) or spec.qr or spec.icon or spec.image or spec.frame != "none"):
             raise LabelError("Das Etikett ist leer.")
         img, warnings = self.render(spec)
-        s = self.settings
-        job = to_job(img, s.density if density is None else density, s.fine if fine is None else fine)
+        job = self._job(img, density, fine)
         done = self.printer.print_job(job, int(copies))
         return {"copies": done, "length_mm": round(render.dots_to_mm(img.width), 1), "warnings": warnings}
 
-    def print_calibration(self):
-        self.printer.print_job(to_job(render.calibration_image(), self.settings.density, self.settings.fine))
+    def print_calibration(self, kind: str = "height"):
+        if kind == "length":     # deliberately longer than a label and without start offset
+            job = to_job(render.length_ruler_image(), self.settings.density, self.settings.fine)
+        else:
+            job = self._job(render.calibration_image())
+        self.printer.print_job(job)

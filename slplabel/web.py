@@ -173,7 +173,7 @@ def create_app(service: Service) -> Guard:
                 "media": [{"name": n, "width": w, "length": ln} for n, w, ln in render.MEDIA],
                 "icons": service.icon_list(),
                 "frames": [{"name": n, "label": f[0]} for n, f in FRAMES.items()],
-                "settings": service.settings.model_dump(), "max_copies": service.config.max_copies,
+                "settings": service.settings.model_dump(), "usable_length_mm": service.usable_length_mm, "max_copies": service.config.max_copies,
                 "password_set": bool(service.config.password)}
 
     def preview(_r, body):
@@ -191,8 +191,8 @@ def create_app(service: Service) -> Guard:
         service.printer.feed()
         return {"ok": True}
 
-    def calibrate(_r, _b):
-        service.print_calibration()
+    def calibrate(_r, body):
+        service.print_calibration("length" if body.get("kind") == "length" else "height")
         return {"ok": True}
 
     def save_settings(_r, body):

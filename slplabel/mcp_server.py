@@ -13,7 +13,8 @@ from .service import Service
 
 Frame = Literal["none", *FRAMES]
 INSTRUCTIONS = """Prints labels on a SII Smart Label Printer 100 (black/white thermal, 203 dpi).
-Labels are 24 mm high; text runs along the length. The usual label is 83 mm long.
+Labels are 24 mm high; text runs along the length. The usual label is 83 mm long;
+labels longer than one physical label are shortened automatically.
 Call preview_label before print_label and look at the picture: printing uses up real
 labels, so only print what the user asked for."""
 

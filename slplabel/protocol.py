@@ -30,8 +30,13 @@ def _skip_blanks(out: bytearray, blanks: int):
         blanks -= n
 
 
-def to_job(bw: Image.Image, density: int = 1, fine: bool = True) -> bytes:
-    """Convert a 1-bit label image (width = length, height = DOTS) to SLP bytes."""
+def to_job(bw: Image.Image, density: int = 1, fine: bool = True, lead: int = 0) -> bytes:
+    """Convert a 1-bit label image (width = length, height = DOTS) to SLP bytes.
+
+    `lead` blank lines come first (calibrated start of the label). Blank lines at
+    the end are not fed: the form feed ejects the label anyway, and feeding them
+    could reach into the next label, which then comes out blank as well.
+    """
     if bw.mode != "1" or bw.height != DOTS:
         raise ValueError("label image must be 1-bit and 192 dots high")
     # Each row of the rotated picture is one line of the print head.
@@ -39,7 +44,7 @@ def to_job(bw: Image.Image, density: int = 1, fine: bool = True) -> bytes:
     raw = ImageOps.invert(rot.convert("L")).convert("1", dither=Image.Dither.NONE).tobytes()
     out = bytearray([CMD_MARGIN, 0, CMD_DENSITY, max(0, min(3, int(density))),
                      CMD_FINEMODE, 1 if fine else 0])
-    blanks = 0
+    blanks = lead
     for y in range(rot.height):
         row = raw[y * ROW_BYTES:(y + 1) * ROW_BYTES]
         if not any(row):
@@ -48,7 +53,6 @@ def to_job(bw: Image.Image, density: int = 1, fine: bool = True) -> bytes:
         _skip_blanks(out, blanks)
         blanks = 0
         out += bytes([CMD_PRINT, ROW_BYTES]) + row
-    _skip_blanks(out, blanks)
     out.append(CMD_FORMFEED)
     return bytes(out)
 
